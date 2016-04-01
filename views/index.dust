@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Streaming with Dust</title>
+    <base href="http://www.dustjs.com/">
+</head>
+<body>
+	{+baseContent}
+		There should be something here...
+	{/baseContent}
+</body>
+</html>

@@ -1,0 +1,4 @@
+{>"index"/}
+{<baseContent}
+Dust does {#features}{name}{@sep}, {/sep}{/features}!
+{/baseContent}
