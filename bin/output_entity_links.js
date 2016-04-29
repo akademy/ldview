@@ -29,10 +29,7 @@ MongoClient.connect( config.local.databaseUrl, function(error, db) {
 							}
 							console.log(className,objects.length);
 							async.each( objects, function( obj, secondOneEachComplete ) {
-								console.log("***", obj["annal:type_id"], "***" );
-								if( obj["annal:type_id"] == "Ensemble") {
-									var stop = 1;
-								}
+
 								var links = getLinks(obj, classNames);
 								for( var l=0;l<links.length;l++) {
 									var linkObj = links[l];
@@ -46,35 +43,31 @@ MongoClient.connect( config.local.databaseUrl, function(error, db) {
 										objectLinks[className][linkObj.class] = [linkObj.field];
 									}
 								}
-								//console.log( objectLinks[className] );
-								secondOneEachComplete();
-							}, function() {
-								console.log("DONEDONE")
-							});
 
-							console.log("toArray");
+								secondOneEachComplete();
+							} );
+
 							oneEachComplete();
 						});
-
-					console.log("async:each");
 
 				}, function(error) {
 					if( error ) {
 						console.error(error);
 					}
-					console.log("findsfinished");
-					console.log( objectLinks );
+					//console.log( objectLinks );
 					displayLinks( objectLinks );
 
 					db.close();
 				});
-				console.log("distinct");
-
 
 			})
 	}
 });
 
+/**
+ * Pretty print entity relations
+ * @param links
+ */
 function displayLinks( links ) {
 	var classes = Object.keys(links);
 
@@ -90,11 +83,21 @@ function displayLinks( links ) {
 
 	}
 }
-
+/**
+ * Get a list of fields which are entity references
+ * @param obj
+ * @param classNames A list of classes
+ */
 function getLinks( obj, classNames ) {
 	return getLinksAnnalist( obj, classNames );
 }
 
+/**
+ * Identify the fields which are entity references specifically in Annalist
+ * @param obj
+ * @param classNames
+ * @returns {Array}
+ */
 function getLinksAnnalist( obj, classNames ) {
 
 	var fields = Object.keys( obj );
@@ -103,37 +106,30 @@ function getLinksAnnalist( obj, classNames ) {
 	async.each( fields, function (field, oneEachComplete) {
 		if( field != "_id" ) {
 			var values = obj[field];
+			values = Array.isArray(values) ? values : [values]; // make everything look like an array (simplify code)
 
-			if( !Array.isArray(values) ) {
-				values = [values];
-			}
-			
-			for( var v=0; v<values.length;v++) {
-
+			for( var v=0; v < values.length;v++) {
 				var value = values[v];
+
 				if( typeof value === 'object' ) {
-					// An object
 					var subfield = Object.keys( value )[0]; // we assume there's one field here.
 					value = value[subfield];
 				}
-				if( /*isString*/ typeof value === 'string' || value instanceof String) {
+
+				if( typeof value === 'string' || value instanceof String) {
 					for (var i = 0; i < classNames.length; i++) {
 						if (value.startsWith(classNames[i])) {
 							// Possible link
-							var className = classNames[i], link = false;
+							var className = classNames[i];
 							if (value[className.length] === "/" ) {
 								if( value.indexOf(" ") === -1 ) {
 									// Lets assume it is a link
 									links.push({
 										class: className,
 										field: field,
-										value : value
+										value : value // not really necessary.
 									});
-									link = true;
 								}
-							}
-							if( !link ) {
-								console.log("links?", link, field, value);
 							}
 							break;
 						}
