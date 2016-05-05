@@ -9,7 +9,7 @@
 
 	<ul>
 		{#entities}
-			<li><a href="/_data/{_id}">{annal:type_id}</a></li>
+			<li><a href="/_data/{_id}">{#value key="annal:type_id"/} - {#entityName/}</a></li>
 		{/entities}
 	</ul>
 
