@@ -1,0 +1,18 @@
+{>"index"/}
+
+{<baseContent}
+
+	{?result}
+		<h1>Something clever here</h1>
+		{#result}
+			<table>
+				{#keyValues}
+					<tr><td>{value}</td></tr>
+				{/keyValues}
+			</table>
+		{/result}
+	{:else}
+		<h1>Entity not found</h1>
+	{/result}
+
+{/baseContent}

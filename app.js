@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 var hoffman = require('hoffman');
 
 var routes = require('./routes/index');
+var routesEntities = require('./routes/entities');
 
 var app = express();
 
@@ -25,6 +26,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.set('view cache', false);
 
 app.use('/', routes);
+app.use('/entities/', routesEntities);
 
 if (app.get('env') === 'production') {
 	// optionally load all templates into dust cache on server start
