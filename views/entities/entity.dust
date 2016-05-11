@@ -2,17 +2,29 @@
 
 {<baseContent}
 
-	{?result}
-		<h1>Something clever here</h1>
-		{#result}
-			<table>
-				{#keyValues}
-					<tr><td>{value}</td></tr>
-				{/keyValues}
-			</table>
-		{/result}
+	{?entity}
+
+		{#entity}
+			<div class="entity first {#value key="annal:type"/}" typeof="{#value key="annal:type"/}" resource="/entities/{_id}" >
+				<h1>{#value key="rdfs:label"/}</h1>
+				{#entity}
+
+						{#keyValues}
+							{! Split up keys and values so that CSS can decide what to show !}
+							<div class="property">
+								<span class="key {key}">{key}</span>
+								<span class="value" {! rdfa can see property!} property="{key}">{value}</span>
+							</div>
+						{/keyValues}
+
+				{/entity}
+			</div>
+		{/entity}
+
 	{:else}
-		<h1>Entity not found</h1>
-	{/result}
+		<div class="entity none">
+			<h1>No entity found</h1>
+		</div>
+	{/entity}
 
 {/baseContent}
