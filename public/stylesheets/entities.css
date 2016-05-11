@@ -1,0 +1,25 @@
+.entity {
+    border: #444 solid 1px;
+    padding: 5px 20px;
+}
+
+.entity.first {
+    border-width: 1px;
+}
+
+.entity.second {
+    border-width: 2px;
+}
+
+.property {
+    display: block;
+    padding: 5px;
+}
+
+.property .key,
+.property .value {
+    display: block;
+}
+.property .key {
+    width: 200px;
+}
