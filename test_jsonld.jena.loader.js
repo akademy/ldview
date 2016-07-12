@@ -1,14 +1,19 @@
 var jsonld_request = require( "jsonld-request" );
 var jsonld = require( "jsonld" );
-var http = require("http");
-var async = require('async');
-var fuseki = require("./lib/fuseki");
 
-fuseki.debug = true;
-fuseki = fuseki.connector("localhost","3030");
+var sparql = require( "sparql" );
+
+var async = require('async');
+var util = require("util");
+
+var fuseki = require("./lib/fuseki");
+//fuseki.debug = true;
 
 var baseUrl =    "http://fast-project.annalist.net/annalist/c/Performances/d/";
 var contextUrl = baseUrl + "coll_context.jsonld";
+var dataset = "test1";
+
+fuseki = fuseki.create("localhost","3030", dataset );
 
 var jsons = [
 	{
@@ -27,44 +32,48 @@ var jsons = [
 ];
 
 
-async.each( jsons, function( json_data, complete ) {
-	console.log("Requestion json");
-	jsonld_request( contextUrl, function(err, response, data ) {
+fuseki.clearDataset( function() {
 
-		// FIX: Fix Context with @base directive
-		var contextJson = JSON.parse( response.body);
-		contextJson["@context"]["@base"] = baseUrl;
+	async.each( jsons, function( json_data, complete ) {
 
-		jsonld_request( json_data.dataUrl, function(err, response, data ) {
+		jsonld_request( contextUrl, function(err, response, data ) {
 
-			// FIX: Insert reference to new context
-			var dataJson = JSON.parse( response.body);
-			dataJson["@context"] = contextJson["@context"];
-			dataJson["@id"] = json_data.dataId;
+			// FIX: Fix Context with @base directive
+			var contextJson = JSON.parse( response.body);
+			contextJson["@context"]["@base"] = baseUrl;
 
-			jsonld.expand( dataJson, {}, function( err, expanded ) {
-				if (err) {
-					console.log(err);
-				}
-				// The expanded (none context version) of jsonld.
-				//console.log(JSON.stringify(expanded, null, 2));
+			jsonld_request( json_data.dataUrl, function(err, response, data ) {
 
-				fuseki.sendJsonLd( expanded, "test1", function( error, result ) {
-					if( error ) {
-						console.log( "Something broke", error );
+				// FIX: Insert reference to new context
+				var dataJson = JSON.parse( response.body);
+				dataJson["@context"] = contextJson["@context"];
+				dataJson["@id"] = json_data.dataId;
+
+				jsonld.expand( dataJson, {}, function( err, expanded ) {
+					if (err) {
+						console.log(err);
 					}
-					else {
-						console.log( "Done something", result );
-					}
+					// The expanded (none context version) of jsonld.
+					//console.log(JSON.stringify(expanded, null, 2));
 
-					complete();
-				} );
+					fuseki.sendJsonLd( expanded, function( error, result ) {
+						if( error ) {
+							console.log( "Something broke", error );
+						}
+						else {
+							console.log( "Done something", result );
+						}
+
+						complete();
+					} );
+				});
+
 			});
+		} );
 
-		});
-	} );
-
-}, function () {
-	// do something now.
-	fuseki.clearDataset("test1");
+	}, function () {
+		// do something now.
+		console.log( "Data load complete" );
+	});
 });
+
