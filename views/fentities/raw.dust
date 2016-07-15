@@ -1,0 +1,24 @@
+{>"index"/}
+
+{<baseContent}
+
+	{?predicates}
+		<h1>A RAW entity</h1>
+			<table>
+		{#predicates}
+			<tr>
+				{#p}
+					<td>{value} ({type})</td>
+				{/p}
+
+				{#o}
+					<td>{value} ({type})</td>
+				{/o}
+			</tr>
+		{/predicates}
+			</table>
+	{:else}
+		<h1>Entity not found</h1>
+	{/predicates}
+
+{/baseContent}

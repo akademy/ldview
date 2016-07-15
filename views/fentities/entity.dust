@@ -1,0 +1,26 @@
+{>"index"/}
+
+{<baseContent}
+
+	{?keyval}
+
+		<div class="entity first" resource="{subject}" >
+			<h1>{subject}</h1>
+
+			{#keyval}
+				{! Split up keys and values so that CSS can decide what to show !}
+				<div class="property">
+					<span class="key {key}">{key}</span>
+					<span class="value" {! rdfa can see property!} property="{key}">{value}</span>
+				</div>
+
+			{/keyval}
+		</div>
+
+	{:else}
+		<div class="entity none">
+			<h1>No entity found</h1>
+		</div>
+	{/keyval}
+
+{/baseContent}

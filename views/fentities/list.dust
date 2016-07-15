@@ -1,0 +1,19 @@
+{>"index"/}
+
+{<baseContent}
+	{?entities}
+		<p>A list of entities</p>
+		<ul>
+			{#entities}
+				<li>
+					{#s}
+						 <a href="/fentities/{value|uc}">{value}</a> &nbsp; ({type}) &nbsp; <a href="/fentities/raw/{value|uc}">Raw</a>
+					{/s}
+				</li>
+			{/entities}
+		</ul>
+	{:else}
+		<p>No entities</p>
+	{/entities}
+
+{/baseContent}
