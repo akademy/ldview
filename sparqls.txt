@@ -1,0 +1,63 @@
+# A list of helpful sparql queries
+
+
+## Select uris linked from an entity including via blank node (one level)
+select ?p2 ?o2 ?p3 ?o3 where {
+	{
+		# Links *FROM* the entity
+		<http://annalist.net/annalist_sitedata/c/Carolan_Guitar/d/Artifact/Carolan_Guitar> ?p2 ?o2 .
+		FILTER ( isURI(?o2) )
+	}
+	UNION
+	{
+		# Links *FROM* the entity via blanknodes
+		<http://annalist.net/annalist_sitedata/c/Carolan_Guitar/d/Artifact/Carolan_Guitar> ?p2 ?o2 .
+		?o2 ?p3 ?o3
+		FILTER( isBlank(?o2) && isURI(?o3) )
+	}
+}
+
+
+
+## Select URIs linked *TO* an entity including via blank nodes (five levels)
+select ?s1 ?p1 ?s2 ?p2 ?s3 ?p3 ?s4 ?p4 ?s5 ?p5 where {
+  {
+    # Thinks that link *TO* the entity
+    ?s1 ?p1 <http://annalist.net/annalist_sitedata/c/Carolan_Guitar/d/Artifact/Carolan_Guitar>
+   	FILTER (isURI(?s1))
+  }
+  UNION
+  {
+    # Things that link *TO* the entity via a blanknode
+    ?s1 ?p1 <http://annalist.net/annalist_sitedata/c/Carolan_Guitar/d/Artifact/Carolan_Guitar>.
+    ?s2 ?p2 ?s1
+      FILTER (isBlank(?s1)&&isURI(?s2))
+  }
+  UNION
+  {
+    # Things that link *TO* the entity via a blanknode via a blanknode.
+      ?s1 ?p1 <http://annalist.net/annalist_sitedata/c/Carolan_Guitar/d/Artifact/Carolan_Guitar>.
+      ?s2 ?p2 ?s1.
+      ?s3 ?p3 ?s2
+      FILTER ( isBlank(?s1) && isBlank(?s2)&&isURI(?s3) )
+  }
+  UNION
+  {
+    # Things that link *TO* the entity via a blanknode via a blanknode.
+      ?s1 ?p1 <http://annalist.net/annalist_sitedata/c/Carolan_Guitar/d/Artifact/Carolan_Guitar>.
+      ?s2 ?p2 ?s1.
+      ?s3 ?p3 ?s2.
+      ?s4 ?p4 ?s3.
+      FILTER ( isBlank(?s1) && isBlank(?s2) && isBlank(?s3) && isURI(?s4))
+  }
+  UNION
+  {
+    # Things that link *TO* the entity via a blanknode via a blanknode via a blacknode via a blanknode
+      ?s1 ?p1 <http://annalist.net/annalist_sitedata/c/Carolan_Guitar/d/Artifact/Carolan_Guitar>.
+      ?s2 ?p2 ?s1.
+      ?s3 ?p3 ?s2.
+      ?s4 ?p4 ?s3.
+      ?s5 ?p5 ?s4.
+      FILTER ( isBlank(?s1) && isBlank(?s2) && isBlank(?s3) && isBlank(?s4) && isURI(?s5) )
+  }
+} limit 100
