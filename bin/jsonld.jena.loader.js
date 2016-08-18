@@ -1,9 +1,14 @@
+var fs = require("fs");
+var url = require("url");
+var path = require("path");
+
 var jsonld_request = require( "jsonld-request" );
 var jsonld = require( "jsonld" );
 var request = require( "request" );
 var async = require('async');
 
-var fuseki = require("./lib/fuseki");
+
+var fuseki = require("../lib/fuseki");
 
 
 var annalistDataUrlBase = 'http://annalist.net/annalist_sitedata/c/Carolan_Guitar/d/'; //  "http://fast-project.annalist.net/annalist/c/Performances/d/";
@@ -11,8 +16,12 @@ var annalistDataContextUrl = annalistDataUrlBase + "coll_context.jsonld";
 var annalistJsonLdFileName = "entity_data.jsonld";
 
 var fusekiDataset = "test1";
+var saveFiles = false;
+var saveFilesBase = "temp/json/";
 
+saveFiles = true;
 //fuseki.debug = true;
+
 fuseki = fuseki.create("localhost","3030", fusekiDataset );
 
 
@@ -86,13 +95,24 @@ function fusekiIndex( jsonLdUrls, callbackComplete ) {
 	fuseki.clearDataset( function () {
 
 		jsonld_request(annalistDataContextUrl, function (error, response, data) {
-			var jsonLdContext = JSON.parse(response.body);
-			jsonLdContext["@context"]["@base"] = annalistDataUrlBase; // FIX: Fix Context with @base directive
 
 			if (error) {
 				console.error("Problem with requesting jsonld context url,", annalistDataContextUrl, error);
 			}
 			else {
+
+				var jsonLdContext = JSON.parse(response.body);
+
+				if( saveFiles ) {
+					fs.writeFileSync(saveFilesBase + "original/" + getFilenameFromURL(annalistDataContextUrl), response.body );
+				}
+
+				jsonLdContext["@context"]["@base"] = annalistDataUrlBase; // FIX: Fix Context with @base directive
+				jsonLdContext["@context"]["annal"] = "http://annalist.net/";
+				
+				if( saveFiles ) {
+					fs.writeFileSync(saveFilesBase + "adjusted/" + getFilenameFromURL(annalistDataContextUrl), JSON.stringify(jsonLdContext, null, 2) );
+				}
 
 				async.eachSeries(jsonLdUrls, function (jsonLdUrl, complete) {
 
@@ -138,6 +158,11 @@ function getJsonLd(jsonldContext, jsonLdUrl, dataId, callbackComplete ) {
 
 			// FIX: Insert reference to new context
 			var dataJson = JSON.parse(response.body);
+
+			if( saveFiles ) {
+				fs.writeFileSync(saveFilesBase + "original/" + getFilenameFromURL(dataId) + "." + getFilenameFromURL(jsonLdUrl), JSON.stringify(dataJson, null, 2) );
+			}
+
 			dataJson["@context"] = jsonldContext["@context"];
 			dataJson["@id"] = dataId;
 
@@ -150,6 +175,11 @@ function getJsonLd(jsonldContext, jsonLdUrl, dataId, callbackComplete ) {
 				else {
 					// The expanded (none context version) of jsonld.
 					//console.log(JSON.stringify(expanded, null, 2));
+
+					if( saveFiles ) {
+						fs.writeFileSync(saveFilesBase + "adjusted/" + getFilenameFromURL(dataId) + "." + getFilenameFromURL(jsonLdUrl), JSON.stringify(expanded, null, 2) );
+					}
+
 					callbackComplete(null, expanded);
 				}
 			});
@@ -193,4 +223,8 @@ function parseFolderList(folderList) {
 
 function filterUnwantedFiles(filename) {
 	return filename !== "type_data_meta.jsonld" && filename !== "coll_context.jsonld";
+}
+
+function getFilenameFromURL( urlPath ) {
+	return path.basename( url.parse(urlPath).pathname);
 }
