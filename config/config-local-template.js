@@ -6,6 +6,8 @@ module.exports = {
 	fuseki : {
 		host : /\?/,          // "localhost",
 		port : /\?/,          //"3030",
-		dataset : /\?/        // "test1"
+		dataset : /\?/,        // "test1"
+		username : /\?/,        // "admin"
+		password : /\?/        // "my_hard-password;"
 	}
 };
