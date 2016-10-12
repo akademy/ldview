@@ -14,7 +14,13 @@ var router = express.Router();
 router.get('/', function(req, res /*, next */) {
 
 	var client = new sparql.Client("http://localhost:3030/test1/sparql");
-	client.query( 'select distinct ?s where { ?s ?p ?o FILTER isURI(?s)} limit 1000 ', function(err, result) {
+	client.query( `
+			select distinct ?s where {
+				?s ?p ?o 
+				FILTER isURI(?s)
+			} 
+			limit 1000
+	`, function(err, result) {
 
 		//var filtered = result.results.bindings.filter( function(ent) { return ent.s.type === "uri"; });
 
@@ -31,7 +37,10 @@ router.get('/', function(req, res /*, next */) {
 router.get('/raw/:uri', function(req, res /*, next */) {
 
 	var client = new sparql.Client("http://localhost:3030/test1/sparql");
-	client.query( 'select * where { <' + req.params.uri +'> ?p ?o }', function(err, result) {
+	client.query( util.format( `
+			select * where { 
+				<%s> ?p ?o 
+			}`, req.params.uri), function(err, result) {
 
 		res.render('fentities/raw', {
 			subject : req.params.uri,
