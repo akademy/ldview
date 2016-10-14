@@ -61,3 +61,29 @@ select ?s1 ?p1 ?s2 ?p2 ?s3 ?p3 ?s4 ?p4 ?s5 ?p5 where {
       FILTER ( isBlank(?s1) && isBlank(?s2) && isBlank(?s3) && isBlank(?s4) && isURI(?s5) )
   }
 } limit 100
+
+
+Getting members of a list (in Fuseki)
+--------------
+
+### Data:
+
+PREFIX : <http://example.org/stuff/1.0/>
+<my_thing> :some_predicate ( "apple" "banana" "cherry" ) .
+
+### Query:
+
+PREFIX list: <http://jena.hpl.hp.com/ARQ/list#>
+SELECT ?pred_with_list  ?length ?members {
+  <http://localhost:3030/alist/my_thing> ?pred_with_list ?list .
+  ?list list:length ?length .
+  ?list list:member ?members .
+}
+
+### Returns (tsv):
+
+pred_with_list,length,members
+?pred_with_list	?length	?members
+<http://example.org/stuff/1.0/some_predicate>	3	"apple"
+<http://example.org/stuff/1.0/some_predicate>	3	"banana"
+<http://example.org/stuff/1.0/some_predicate>	3	"cherry"

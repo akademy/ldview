@@ -11,7 +11,18 @@
 				{! Split up keys and values so that CSS can decide what to show !}
 				<div class="property">
 					<span class="key {key}">{key}</span>
-					<span class="value" {! rdfa can see property!} property="{key}">{value}</span>
+					<span class="value" {! rdfa can see property!} property="{key}">
+						{?subs}
+							<span class="key {key}">{value}</span>
+							<ul>
+							{#subs}
+								<li>{.}</li>
+							{/subs}
+							</ul>
+						{:else}
+							{value}
+						{/subs}
+					</span>
 				</div>
 
 			{/keyval}

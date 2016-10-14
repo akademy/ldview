@@ -1,6 +1,6 @@
-var express = require('express');
-var router = express.Router();
+var util = require("util");
 
+var express = require('express');
 //var fuseki = require("/lib/fuseki");
 var sparql = require( "sparql" );
 
@@ -8,19 +8,24 @@ var config = require('../config/config');
 var helpersDust = require('../lib/helpersDust.js');
 var helpersEntity = require('../lib/helpersEntity.js');
 
-
-//fuseki = fuseki.create( config.fusekiDatabase.host, config.fusekiDatabase.port, config.fusekiDatabase.dataset );
+var router = express.Router();
 
 /* list all the entities we have */
 router.get('/', function(req, res /*, next */) {
 
 	var client = new sparql.Client("http://localhost:3030/test1/sparql");
-	client.query( 'select distinct ?s where { ?s ?p ?o } limit 1000', function(err, result) {
+	client.query( `
+			select distinct ?s where {
+				?s ?p ?o 
+				FILTER isURI(?s)
+			} 
+			limit 1000
+	`, function(err, result) {
 
-		var filtered = result.results.bindings.filter( function(ent) { return ent.s.type === "uri"; });
+		//var filtered = result.results.bindings.filter( function(ent) { return ent.s.type === "uri"; });
 
 		res.render('fentities/list', {
-			entities: filtered,
+			entities: result.results.bindings,//filtered,
 			//hasValue: helpersDust.hasValue,
 			value: helpersDust.value,
 			entityName: helpersDust.entityName
@@ -32,9 +37,13 @@ router.get('/', function(req, res /*, next */) {
 router.get('/raw/:uri', function(req, res /*, next */) {
 
 	var client = new sparql.Client("http://localhost:3030/test1/sparql");
-	client.query( 'select * where { <' + req.params.uri +'> ?p ?o }', function(err, result) {
+	client.query( util.format( `
+			select * where { 
+				<%s> ?p ?o 
+			}`, req.params.uri), function(err, result) {
 
 		res.render('fentities/raw', {
+			subject : req.params.uri,
 			predicates: result.results.bindings,
 			//hasValue: helpersDust.hasValue,
 			value: helpersDust.value,
@@ -47,25 +56,92 @@ router.get('/raw/:uri', function(req, res /*, next */) {
 router.get('/:uri', function(req, res /*, next */) {
 
 	var client = new sparql.Client("http://localhost:3030/test1/sparql");
-	client.query( 'select * where { <' + req.params.uri +'> ?p ?o }', function(err, result) {
+	client.query(
+		//util.format( `select * where { <%s> ?p ?o }`, req.params.uri ),
+		// Direct and indirect via (one level) blank
+		util.format( `select distinct ?p ?o ?p2 ?o2 where 
+		{
+		  {
+		    <%s> ?p ?o.
+		    FILTER( !isBlank(?o) )
+		  }
+		  UNION
+		  {
+		    <%s> ?p ?o.
+		    ?o ?p2 ?o2
+		  }
+		} limit 1000`,  req.params.uri,  req.params.uri ),
+		function(err, result) {
 
-		var results = result.results.bindings;
-		var keyval = [];
-		for( var i=0;i<results.length;i++) {
-			keyval.push( {
-				key: results[i]["p"]["value"],
-				value: results[i]["o"]["value"]
+			// var uris = result.results.bindings.filter( function(ent) { return ent.s.type === "uri"; });
+
+			var results = result.results.bindings;
+			var tidyResults = {};
+
+			for( var i=0;i<results.length;i++) {
+				var predval = results[i]["p"]["value"];
+
+				if( results[i]["o"].type !== "bnode" ) {
+					tidyResults[predval] = {
+						sub: false,
+						value: results[i]["o"]["value"]
+					};
+				}
+				else {
+					if( !tidyResults[predval] ) {
+						tidyResults[predval] = {
+							sub: true,
+							value: results[i]["p2"]["value"],
+							subvalues: []
+						}
+					}
+
+					tidyResults[predval]["subvalues"].push(results[i]["o2"]["value"]);
+				}
+			}
+
+			var keyval = [];
+			for( var key in tidyResults ) {
+				var tidyResult = {
+					key: key,
+					sub: tidyResults[key].sub,
+					value: tidyResults[key].value
+				};
+
+				if( tidyResult.sub ) {
+					tidyResult["subs"] = tidyResults[key].subvalues
+				}
+				keyval.push(tidyResult);
+			}
+
+			/*
+			for( i=0;i<results.length;i++) {
+				if (results[i]["o"].type === "bnode") {
+					keyval.push({
+						sub : true,
+						key: results[i]["p"]["value"],
+						subkey: results[i]["p2"]["value"],
+						value: results[i]["o2"]["value"]
+					});
+				}
+				else {
+					keyval.push({
+						sub: false,
+						key: results[i]["p"]["value"],
+						value: results[i]["o"]["value"]
+					});
+				}
+			}
+			*/
+
+			res.render('fentities/entity', {
+				subject : req.params.uri,
+				keyval: keyval,
+				//hasValue: helpersDust.hasValue,
+				value: helpersDust.value,
+				entityName: helpersDust.entityName
 			});
-		}
-		
-		res.render('fentities/entity', {
-			subject : req.params.uri,
-			keyval: keyval,
-			//hasValue: helpersDust.hasValue,
-			value: helpersDust.value,
-			entityName: helpersDust.entityName
 		});
-	});
 
 });
 

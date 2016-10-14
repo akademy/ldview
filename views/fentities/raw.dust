@@ -5,6 +5,10 @@
 	{?predicates}
 		<h1>A RAW entity</h1>
 			<table>
+			<tr>
+					<td>id (uri)</td>
+					<td>{subject}</td>
+			</tr>
 		{#predicates}
 			<tr>
 				{#p}
