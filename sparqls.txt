@@ -10,6 +10,7 @@ select ?p2 ?o2 ?p3 ?o3 where {
 	}
 	UNION
 	{
+
 		# Links *FROM* the entity via blanknodes
 		<http://annalist.net/annalist_sitedata/c/Carolan_Guitar/d/Artifact/Carolan_Guitar> ?p2 ?o2 .
 		?o2 ?p3 ?o3
@@ -87,3 +88,57 @@ pred_with_list,length,members
 <http://example.org/stuff/1.0/some_predicate>	3	"apple"
 <http://example.org/stuff/1.0/some_predicate>	3	"banana"
 <http://example.org/stuff/1.0/some_predicate>	3	"cherry"
+
+
+Getting members including list values
+-------------------------------------
+
+PREFIX list: <http://jena.hpl.hp.com/ARQ/list#>
+
+SELECT ?s ?p ?member {
+  {
+  	?s ?p ?member . # Get members
+    optional{
+      ?member list:member ?ignore_lists # But not those which are lists (bnodes)
+    }
+    filter( ! bound( ?ignore_lists ) )
+  }
+  UNION {
+	?s ?p ?lists .
+	?lists list:member ?member	# Get list members
+  }
+
+  filter( ?s = <http://localhost:3030/alist/my_thing> )
+}
+
+
+Getting values, lists nad first level bnodes
+-------------------------------------------
+
+PREFIX list: <http://jena.hpl.hp.com/ARQ/list#>
+
+SELECT ?s ?p ?o ?p2 ?o2 {
+  {
+  	?s ?p ?o . # Get members
+    optional{
+      ?o list:member ?ignore_lists # But not those which are lists (bnodes) or blank subjects
+    }
+    filter( !isBlank( ?o ) )
+  }
+
+  UNION {
+	?s ?p ?lists .
+	?lists list:member ?o	# Get list members
+  }
+
+  UNION {
+	?s ?p2 ?b1.
+	?b1 ?p ?o . # Get blank node stuff. TODO: Can we "forget" intermediate predicate?
+    optional{
+      ?b1 list:member ?ignore_lists # But not those which are lists (bnodes)
+    }
+    filter( ! bound( ?ignore_lists ) )
+  }
+
+  filter( ?s = <http://localhost:3030/alist/my_thing> )
+}
