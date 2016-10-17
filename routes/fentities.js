@@ -59,7 +59,7 @@ router.get('/:uri', function(req, res /*, next */) {
 	client.query(
 		//util.format( `select * where { <%s> ?p ?o }`, req.params.uri ),
 		// Direct and indirect via (one level) blank
-		util.format( `select distinct ?p ?o ?p2 ?o2 where 
+		/*util.format( `select distinct ?p ?o ?p2 ?o2 where
 		{
 		  {
 		    <%s> ?p ?o.
@@ -70,7 +70,37 @@ router.get('/:uri', function(req, res /*, next */) {
 		    <%s> ?p ?o.
 		    ?o ?p2 ?o2
 		  }
-		} limit 1000`,  req.params.uri,  req.params.uri ),
+		} limit 1000`,  req.params.uri,  req.params.uri ),*/
+
+		util.format( `
+			PREFIX list: <http://jena.hpl.hp.com/ARQ/list#>
+			
+			SELECT ?s ?p ?o ?p2 ?o2 {
+				{
+					?s ?p ?o . # Get members
+					optional{
+						?o list:member ?ignore_lists # But not those which are lists (bnodes) or blank subjects
+					}
+					filter( !isBlank( ?o ) )
+				}
+			
+				UNION {
+					?s ?p ?lists .
+					?lists list:member ?o	# Get list members
+				}
+			
+				UNION {
+					?s ?p2 ?b1.
+					?b1 ?p ?o . # Get blank node stuff. TODO: Can we "forget" intermediate predicate?
+					optional {
+						?b1 list:member ?ignore_lists # But not those which are lists (bnodes)
+					}
+					filter( ! bound( ?ignore_lists ) )
+				}
+			
+				filter( ?s = <%s> )
+			}`,
+			req.params.uri ),
 		function(err, result) {
 
 			// var uris = result.results.bindings.filter( function(ent) { return ent.s.type === "uri"; });
