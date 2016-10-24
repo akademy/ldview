@@ -95,8 +95,7 @@ router.get('/:uri', function(req, res /*, next */) {
 					optional {
 						?b1 list:member ?ignore_lists # But not those which are lists (bnodes)
 					}
-					filter( ! bound( ?ignore_lists ) )
-				}
+					filter( ! bound( ?ignore_lists ) )				}
 			
 				filter( ?s = <%s> )
 			}`,
@@ -172,7 +171,50 @@ router.get('/:uri', function(req, res /*, next */) {
 				entityName: helpersDust.entityName
 			});
 		});
+});
 
+router.get('/attrs/:uri', function(req, res ) {
+
+	var query = util.format(
+		`	
+			SELECT ?s ?p ?o {
+					?s ?p ?o . # Get members
+					filter( ?s = <%s> )
+			}
+		`
+		, req.params.uri );
+
+	var client = new sparql.Client("http://localhost:3030/test1/sparql");
+	client.query( query, function(err, result) {
+		res.render('fentities/basic', {
+			subject : req.params.uri,
+			results : result.results.bindings
+		});
+	});
+});
+
+
+router.post('/links/:uri', function(req, res ) {
+
+	var uris = (req.body.uris) ? JSON.parse(req.body.uris) : [];
+	var bnodes = (req.body.bnodes) ? JSON.parse(req.body.bnodes) : [];
+
+	var query = util.format(
+		`	
+			SELECT ?s ?p ?entity {
+					?s ?p ?entity . # Get members
+					filter( ?entity = <%s> )
+			}
+		`
+		, req.params.uri );
+
+
+	var client = new sparql.Client("http://localhost:3030/test1/sparql");
+	client.query( query, function(err, result) {
+
+		var results = result.results.bindings;
+		res.send( results );
+	});
 });
 
 module.exports = router;
