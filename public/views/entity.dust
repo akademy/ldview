@@ -1,0 +1,19 @@
+<div class="entity">
+	{!<p><small>{id}</small></p>!}
+	<h2>{#getValueList key="rdfs:label"}
+		{#.}
+			{#getValue key="@value"/}
+		{/.}
+	{/getValueList}</h2>
+	<p>{#getValue key="rdfs:comment"/}</p>
+	{#getValueList key="@type"}
+		<p>{.}</p>
+	{/getValueList}
+	{?attributes}
+		<ul style="display:nodne">
+		{#attributes}
+		   <li>{attr} : {value}</li>
+		{/attributes}
+	  </ul>
+	{/attributes}
+</div>
