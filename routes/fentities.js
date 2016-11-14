@@ -1,4 +1,5 @@
-var util = require("util");
+const util = require("util");
+const fs = require('fs');
 
 var express = require('express');
 //var fuseki = require("/lib/fuseki");
@@ -189,9 +190,29 @@ router.get('/attrs/:uri', function(req, res ) {
 
 	var client = new sparql.Client("http://localhost:3030/test1/sparql");
 	client.query( query, function(err, result) {
-		res.render('fentities/basic', {
+
+		// todo: choose view based on entity type
+
+		var bindings = result.results.bindings;
+		var annalistType = null; // TODO: use none annalist type.
+		for( var i=0, z=bindings.length;i<z; i++) {
+			if( bindings[i].p.value === "http://annalist.net/type_id" ) {
+				annalistType = bindings[i].o.value;
+				break;
+			}
+		}
+
+		var render = 'fentities/basic';
+		if( annalistType === 'Person') {
+			render = 'fentities/entity/person';
+		}
+		//else if( annalistType === "Performance") {
+		//	render = 'fentities/entity/performance';
+		//}
+
+		res.render( render, {
 			subject : req.params.uri,
-			results : result.results.bindings
+			results : bindings
 		});
 	});
 });
@@ -239,6 +260,16 @@ router.post('/links/:uri', function(req, res ) {
 				res.send(result);
 			});
 		});
+	});
+});
+
+router.get('/template/:uri', function(req, res ) {
+	// TODO work out which template we need. (Or construct the template)
+	fs.readFile('views/fentities/entity/_general.dust', 'utf8', function (err,data) {
+		if (err) {
+			return console.log(err);
+		}
+		res.send(data);
 	});
 });
 

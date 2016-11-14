@@ -5,12 +5,16 @@
 			{#getValue key="@value"/}
 		{/.}
 	{/getValueList}</h2>
-	<p>{#getValue key="rdfs:comment"/}</p>
-	{#getValueList key="@type"}
+	<p>{#getValueList key="rdfs:comment"}
+	{#.}
+		{#getValue key="@value"/}
+	{/.}
+	{/getValueList}</p>
+	{!#getValueList key="@type"}
 		<p>{.}</p>
-	{/getValueList}
+	{/getValueList!}
 	{?attributes}
-		<ul style="display:nodne">
+		<ul style="display:none">
 		{#attributes}
 		   <li>{attr} : {value}</li>
 		{/attributes}

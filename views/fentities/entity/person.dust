@@ -1,0 +1,59 @@
+{>"index"/}
+
+{<baseContent}
+	<h1>{subject}</h1>
+	<div class="entity" id="main" data-uri="{subject}">
+		{?results}
+			<table>
+				{#results}
+					<tr>
+						{#s}
+							<td>{value}</td>
+						{/s}
+							<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+						{#p}
+							<td>{value}</td>
+						{/p}
+							<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+						{#o}
+							<td>({type}) {value}</td>
+						{/o}
+					</tr>
+				<tr></tr>
+				{/results}
+			</table>
+		{:else}
+			<p>Nothing</p>
+		{/results}
+	</div>
+
+	<div class="entities" data-uri="http://erlangen-crm.org/efrbroo/F31_Performance">
+	</div>
+
+	<div id="others">
+
+	</div>
+
+	<script>
+		var ev = ev || {};
+		ev.entities = [
+			{
+				"subject" : "{subject}",
+				"attributes" : [
+					{#results}
+					{
+						{#p}
+							p : "{value}",
+						{/p}
+						{#o}
+							o : "{value}",
+							t : "{type}"
+						{/o}
+					},
+					{/results}
+				]
+			}
+		];
+	</script>
+
+{/baseContent}
