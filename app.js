@@ -9,6 +9,7 @@ var hoffman = require('hoffman');
 var routes = require('./routes/index');
 var routesEntities = require('./routes/entities');
 var routesFentities = require('./routes/fentities');
+var routesData = require('./routes/ajax-entities');
 
 var app = express();
 
@@ -17,6 +18,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'dust');
 app.engine('dust', hoffman.__express());
 
+app.use(hoffman.stream);
 
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico'))); // uncomment after placing your favicon in /public
 app.use(logger('dev'));
@@ -29,6 +31,7 @@ app.set('view cache', false);
 app.use('/', routes);
 app.use('/entities/', routesEntities);
 app.use('/fentities/', routesFentities);
+app.use('/data/', routesData );
 
 if (app.get('env') === 'production') {
 	// optionally load all templates into dust cache on server start
