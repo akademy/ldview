@@ -8,7 +8,7 @@ var request = require( "request" );
 var async = require('async');
 
 
-var fuseki = require("../lib/fuseki");
+var fuseki_lib = require("../lib/fuseki");
 
 
 var annalistDataUrlBase = 'http://annalist.net/annalist_sitedata/c/Carolan_Guitar/d/'; //  "http://fast-project.annalist.net/annalist/c/Performances/d/";
@@ -19,11 +19,12 @@ var fusekiDataset = "test1";
 var saveFiles = false;
 var saveFilesBase = "temp/json/";
 
+var config = require('../config/config');
+
 saveFiles = true;
-//fuseki.debug = true;
+//fuseki_lib.debug = true;
 
-fuseki = fuseki.create("localhost","3030", fusekiDataset );
-
+var fuseki = fuseki_lib.create( config.local.fuseki.host, config.local.fuseki.port, config.local.fuseki.dataset, config.local.fuseki.username, config.local.fuseki.password );
 
 request( annalistDataUrlBase, function(error, response, body ) {
 
@@ -92,52 +93,55 @@ request( annalistDataUrlBase, function(error, response, body ) {
 
 function fusekiIndex( jsonLdUrls, callbackComplete ) {
 
-	fuseki.clearDataset( function () {
-
-		jsonld_request(annalistDataContextUrl, function (error, response, data) {
-
-			if (error) {
-				console.error("Problem with requesting jsonld context url,", annalistDataContextUrl, error);
-			}
-			else {
-
-				var jsonLdContext = JSON.parse(response.body);
-
-				if( saveFiles ) {
-					fs.writeFileSync(saveFilesBase + "original/" + getFilenameFromURL(annalistDataContextUrl), response.body );
+	fuseki.createDataset( fusekiDataset, "mem", function(error) {
+	
+		fuseki.clearDataset( function () {
+	
+			jsonld_request(annalistDataContextUrl, function (error, response, data) {
+	
+				if (error) {
+					console.error("Problem with requesting jsonld context url,", annalistDataContextUrl, error);
 				}
-
-				jsonLdContext["@context"]["@base"] = annalistDataUrlBase; // FIX: Fix Context with @base directive
-				jsonLdContext["@context"]["annal"] = "http://annalist.net/";
-				
-				if( saveFiles ) {
-					fs.writeFileSync(saveFilesBase + "adjusted/" + getFilenameFromURL(annalistDataContextUrl), JSON.stringify(jsonLdContext, null, 2) );
-				}
-
-				async.eachSeries(jsonLdUrls, function (jsonLdUrl, complete) {
-
-					var dataId = jsonLdUrl.substr( 0, jsonLdUrl.indexOf( annalistJsonLdFileName ) - 1 );
-
-					getJsonLd( jsonLdContext, jsonLdUrl , dataId, function (error, jsonld) {
-
-						fuseki.sendJsonLd(jsonld, function (error, result) {
-
-							if (error) {
-								console.error("Something broke", error);
-							}
-							else {
-								console.log("Done something", result);
-							}
-
-							complete();
+				else {
+	
+					var jsonLdContext = JSON.parse(response.body);
+	
+					if( saveFiles ) {
+						fs.writeFileSync(saveFilesBase + "original/" + getFilenameFromURL(annalistDataContextUrl), response.body );
+					}
+	
+					jsonLdContext["@context"]["@base"] = annalistDataUrlBase; // FIX: Fix Context with @base directive
+					jsonLdContext["@context"]["annal"] = "http://annalist.net/";
+					
+					if( saveFiles ) {
+						fs.writeFileSync(saveFilesBase + "adjusted/" + getFilenameFromURL(annalistDataContextUrl), JSON.stringify(jsonLdContext, null, 2) );
+					}
+	
+					async.eachSeries(jsonLdUrls, function (jsonLdUrl, complete) {
+	
+						var dataId = jsonLdUrl.substr( 0, jsonLdUrl.indexOf( annalistJsonLdFileName ) - 1 );
+	
+						getJsonLd( jsonLdContext, jsonLdUrl , dataId, function (error, jsonld) {
+	
+							fuseki.sendJsonLd(jsonld, function (error, result) {
+	
+								if (error) {
+									console.error("Something broke", error);
+								}
+								else {
+									console.log("Done something", result);
+								}
+	
+								complete();
+							});
 						});
 					});
-				});
-			}
-
-		}, function () {
-			// do something now.
-			callbackComplete();
+				}
+	
+			}, function () {
+				// do something now.
+				callbackComplete();
+			});
 		});
 	});
 
