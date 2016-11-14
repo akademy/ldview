@@ -4,6 +4,9 @@ var express = require('express');
 //var fuseki = require("/lib/fuseki");
 var sparql = require( "sparql" );
 
+var mongodb = require('mongodb');
+var MongoClient = mongodb.MongoClient;
+
 var config = require('../config/config');
 var helpersDust = require('../lib/helpersDust.js');
 var helpersEntity = require('../lib/helpersEntity.js');
@@ -196,7 +199,7 @@ router.get('/attrs/:uri', function(req, res ) {
 
 router.post('/links/:uri', function(req, res ) {
 
-	var uris = (req.body.uris) ? JSON.parse(req.body.uris) : [];
+	/*var uris = (req.body.uris) ? JSON.parse(req.body.uris) : [];
 	var bnodes = (req.body.bnodes) ? JSON.parse(req.body.bnodes) : [];
 
 	var query = util.format(
@@ -214,6 +217,28 @@ router.post('/links/:uri', function(req, res ) {
 
 		var results = result.results.bindings;
 		res.send( results );
+	});*/
+	MongoClient.connect(config.local.databaseUrl, function(err, db) {
+		if (err) {
+			throw err;
+		}
+		db.collection(config.collection).find({"@id":req.params.uri},{"links":true}).toArray(function(err, result) {
+			if (err) {
+				throw err;
+			}
+			var links = result[0].links;
+			var q = { $or : [] };
+			for( var i=0; i< links.length; i ++ ) {
+				q["$or"].push( { "@id" : links[i] } )
+			}
+
+			db.collection(config.collection).find(q).toArray(function(err, result) {
+				if (err) {
+					throw err;
+				}
+				res.send(result);
+			});
+		});
 	});
 });
 
