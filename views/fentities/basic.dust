@@ -1,28 +1,52 @@
 {>"index"/}
 
 {<baseContent}
-
-	{?predicates}
-		<h1>A RAW entity</h1>
-			<table>
-			<tr>
-					<td>id (uri)</td>
-					<td>{subject}</td>
-			</tr>
-		{#predicates}
-			<tr>
-				{#p}
-					<td>{value} ({type})</td>
-				{/p}
-
-				{#o}
-					<td>{value} ({type})</td>
-				{/o}
-			</tr>
-		{/predicates}
-			</table>
+	<h1>{subject}</h1>
+	{?results}
+		<table>
+			{#results}
+				<tr>
+					{#s}
+						<td>{value}</td>
+					{/s}
+						<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+					{#p}
+						<td>{value}</td>
+					{/p}
+						<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+					{#o}
+						<td>({type}) {value}</td>
+					{/o}
+				</tr>
+			<tr></tr>
+			{/results}
+		</table>
 	{:else}
-		<h1>Entity not found</h1>
-	{/predicates}
+		<p>Nothing</p>
+	{/results}
+
+	<div id="others"></div>
+
+	<script>
+		var ev = ev || {};
+		ev.entities = [
+			{
+				"subject" : "{subject}",
+				"attributes" : [
+					{#results}
+					{
+						{#p}
+							p : "{value}",
+						{/p}
+						{#o}
+							o : "{value}",
+							t : "{type}"
+						{/o}
+					},
+					{/results}
+				]
+			}
+		];
+	</script>
 
 {/baseContent}
