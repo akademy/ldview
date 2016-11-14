@@ -28,11 +28,23 @@ ev.EntityControl = function() {
 			var entityTypes = splitEntitiesIntoTypes( data );
 
 			for( var entityType in entityTypes ) {
-				$("#others").append( '<div class="entities" data-uri="' + entityType + '"><h2>' + entityType + '</h2></div>' );
+
+				var typePosition = '.entities[data-uri="' + entityType + '"]';
+				var $typeDiv = $(typePosition);
+				if( $typeDiv.length === 0 ) {
+					$("#others").append( '<div class="entities" data-uri="' + entityType + '"></div>' );
+					$typeDiv = $(typePosition);
+				}
+				$typeDiv.append( '<h2>' + entityType + '</h2>' );
+
+				var display = (function( entityType, $typeDiv ) {
+					return function( error, data ) 	{
+						$typeDiv.append(data);
+					};
+				})( entityType, $typeDiv );
+
 				for( var i=0,z=entityTypes[entityType].length;i<z;i++) {
-					showLink(entityTypes[entityType][i], function (error, data) {
-						$('[data-uri="' + entityType + '"]').append(data);
-					});
+					showLink(entityTypes[entityType][i], display );
 				}
 			}
 
@@ -83,7 +95,7 @@ ev.EntityControl = function() {
 
 	function showLink( entity, callback ) {
 		var attributes = [];
-
+		var encodeId = encodeURIComponent(entity["@id"]);
 		var context = {
 			id : entity["@id"]
 		};
@@ -117,7 +129,11 @@ ev.EntityControl = function() {
 
 		var tc = new ev.TemplateControl([]);
 
-		tc.addTemplate( "entity", "/views/entity.dust", function( error ) {
+		//
+		//TODO load templates based on type not the ID!
+		//
+
+		tc.addTemplate( encodeId + "_2", "/fentities/template/" + encodeId + "?level=2", function( error ) {
 			if( error ) {
 				console.log( error );
 			}
@@ -126,11 +142,9 @@ ev.EntityControl = function() {
 			}
 		});
 
-
-
 		console.log("context", context);
 
-		tc.render( "entity", context, function( error, result ) {
+		tc.render( encodeId + "_2", context, function( error, result ) {
 			callback( error, result );
 		});
 	}
