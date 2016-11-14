@@ -2,12 +2,13 @@
  * Created by matthew on 24/10/16.
  */
 const fs = require('fs');
-const MongoClient = require('mongodb').MongoClient;
+const mongo = require('mongodb');
 const config = require('../config/config');
 const async = require('async');
 
 const util = require("util");
 
+const MongoClient = mongo.MongoClient;
 const jsonFolder = '../temp/json/adjusted';
 
 MongoClient.connect( config.local.databaseUrl, function(error, db) {
@@ -34,11 +35,11 @@ MongoClient.connect( config.local.databaseUrl, function(error, db) {
 
 		db.collection(config.collection).distinct("@id", function(err, ids) {
 			var allLinks = {};
-			 async.eachSeries( ["http://annalist.net/annalist_sitedata/c/Carolan_Guitar/d/Work/A_Very_Long_Cat"], function( id, done ) {
-			// async.eachSeries( ids[0], function( id, done ) {
+				// async.eachSeries( ["http://annalist.net/annalist_sitedata/c/Carolan_Guitar/d/Work/A_Very_Long_Cat"], function( id, done ) {
+			async.eachSeries( ids, function( id, done ) {
 
 				db.collection(config.collection)
-					.find({"@id": id }, { "links" : false })
+					.find({"@id": id }, { "links" : false, "linksAndPath" : false })
 					.toArray(function( error, objects ) {
 						var links = findLinks(objects[0]);
 						console.log( util.inspect(links, {showHidden:false, colors:true, depth:null}) );
@@ -46,11 +47,12 @@ MongoClient.connect( config.local.databaseUrl, function(error, db) {
 						links = findLinksExtended(objects[0]);
 						console.log( util.inspect(links, {showHidden:false, colors:true, depth:null}) );
 
-						flatLinks = flattenLinks(links);
+						var flatLinks = [];
+						flattenLinks( links, flatLinks );
 						console.log( "FlatLinks:", util.inspect(flatLinks, {showHidden:false, colors:true, depth:null}) );
 
-						links = links.filter( function(linker) {
-							var link = linker.values;
+						flatLinks = flatLinks.filter( function(linker) {
+							var link = linker.link;
 							var splits = link.split("/");
 							return link.indexOf( "http://annalist" ) != -1
 									&& splits.length == 9
@@ -61,19 +63,19 @@ MongoClient.connect( config.local.databaseUrl, function(error, db) {
 						console.log(id);
 						//console.log(links);
 						if( ! (id in allLinks) ) {
-							allLinks[id] =  links;
+							allLinks[id] =  flatLinks;
 						}
 						else {
-							allLinks[id] = allLinks[id].concat( links )
+							allLinks[id] = allLinks[id].concat( flatLinks )
 						}
 
 
-						for( var i = 0;i<links.length; i++ ) {
-							if( ! (links[i] in allLinks) ) {
-								allLinks[links[i]] =  [id]; // linkback
+						for( var i = 0;i<flatLinks.length; i++ ) {
+							if( ! (flatLinks[i] in allLinks) ) {
+								allLinks[flatLinks[i]] =  [id]; // linkback
 							}
 							else {
-								var otherLinks = allLinks[links[i]];
+								var otherLinks = allLinks[flatLinks[i]];
 								if (!(id in otherLinks)) {
 									otherLinks.push(id);
 								}
@@ -88,10 +90,10 @@ MongoClient.connect( config.local.databaseUrl, function(error, db) {
 
 				//outputGraphData( allLinks );
 
-				//for( id in allLinks ) {
-				//	db.collection(config.collection)
-				//		.findOneAndUpdate({"@id": id },{"$set" : { "links" : allLinks[id] } })
-				//}
+				for( id in allLinks ) {
+					db.collection(config.collection)
+						.findOneAndUpdate({"@id": id },{"$set" : { "linksAndPath" : allLinks[id] } })
+				}
 			});
 		});
 	}
@@ -177,7 +179,7 @@ function findLinksExtended( entity, base, key ) {
 	}
 	else if( entity.constructor === Object ) {
 		for (key in entity) {
-			if( key === "@value" || (key === "@id" && base !== 1) ) {
+			if( key === "@value" || key === "@list" || (key === "@id" && base !== 1) ) {
 				var stringLink  = findLinksExtended(entity[key], base, key);
 				if( stringLink !== null ) {
 					links = links.concat( stringLink );
@@ -215,41 +217,34 @@ function findLinksExtended( entity, base, key ) {
 	return links;
 }
 
-function flattenLinks( links, base, pathBuild ) {
+function flattenLinks( links, collect, path, base ) {
+	path = (typeof path !== "undefined") ? path : [];
 	base = (typeof base !== "undefined") ? base + 1 : 1;
 
-	var flatLinks = [];
-	console.log(links, base, pathBuild);
+	console.log( "log:", links, path, base );
 
 	if( links.constructor === Array ) {
 		for( var i=0, z=links.length;i < z;i++) {
 			if( links[i].constructor === Object ) {
-				if( base === 1 ) {
-					pathBuild = {
-						"link" : null,//links[i].key,
-						"path" : []
-					};
-					flatLinks.push( pathBuild );
-				}
-				pathBuild.path.push( links[i].key );
-				flattenLinks( links[i].values, base, pathBuild )
+
+				path.push( links[i].key );
+				flattenLinks( links[i].values, collect, path, base );
+				path.pop();
 
 			}
 			else {
-				return flattenLinks( links[i], base, pathBuild );
+				// array
+				flattenLinks( links[i], collect, path, base );
 			}
 		}
 	}
-	/*else if( links.constructor === Object ) {
-		for (key in links) {
-
-		}*/
 
 	else {
-		pathBuild.link = links; // A string
+		collect.push( {
+			link : links,
+			path : path.slice()
+		});
 	}
-	
-	return flatLinks;
 }
 
 function outputGraphData( allLinks ) {
