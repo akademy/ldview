@@ -116,16 +116,8 @@ ev.EntityControl = function() {
 
 		context["attributes"] = attributes;
 
-		context["getValue"] =  function(chunk, context, bodies, params) {
-			var entity = context.current();
-			console.log("getValue", entity,params.key,entity[params.key]);
-			return chunk.write( entity[params.key] );
-		};
-		context["getValueList"] =  function(chunk, context, bodies, params) {
-			var entity = context.current();
-			console.log("getValue", entity,params.key,entity[params.key]);
-			return entity[params.key];
-		};
+		context["get"] =  ev.DustHelpers.get;
+		context["getValue"] =  ev.DustHelpers.getValue;
 
 		var tc = new ev.TemplateControl([]);
 
@@ -169,6 +161,8 @@ ev.EntityControl = function() {
 
 $(document).ready( function() {
 
-	var ec = new ev.EntityControl();
-	ec.getLinked( ev.entities[0] );
+	if( ev && ev.entities && ev.entities.length ) {
+		var ec = new ev.EntityControl();
+		ec.getLinked(ev.entities[0]);
+	}
 });

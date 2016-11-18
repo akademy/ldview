@@ -1,15 +1,17 @@
 <div class="entity">
 	{!<p><small>{id}</small></p>!}
-	<h2>{#getValueList key="rdfs:label"}
-		{#.}
-			{#getValue key="@value"/}
-		{/.}
-	{/getValueList}</h2>
-	<p>{#getValueList key="rdfs:comment"}
+	<h2>{#get key="rdfs:label"}
+			{#.}
+				{#getValue key="@value"/}
+			{/.}
+		{/get}
+	</h2>
+
+	{! <p>{#getValue key="rdfs:comment"}
 	{#.}
 		{#getValue key="@value"/}
 	{/.}
-	{/getValueList}</p>
+	{/getValueList}</p> !}
 	{!#getValueList key="@type"}
 		<p>{.}</p>
 	{/getValueList!}
