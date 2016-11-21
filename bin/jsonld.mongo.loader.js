@@ -70,14 +70,30 @@ MongoClient.connect( config.local.databaseUrl, function(error, db) {
 						}
 
 
-						for( var i = 0;i<flatLinks.length; i++ ) {
-							if( ! (flatLinks[i] in allLinks) ) {
-								allLinks[flatLinks[i]] =  [id]; // linkback
+						for( var i = 0, z = flatLinks.length; i < z; i++ ) {
+							if( ! (flatLinks[i].link in allLinks) ) {
+								allLinks[flatLinks[i].link] =  [{
+									path: flatLinks[i].path,
+									link: id,
+									reverse: true  // the path shows how to get from b to a
+								}]; // linkback
 							}
 							else {
-								var otherLinks = allLinks[flatLinks[i]];
-								if (!(id in otherLinks)) {
-									otherLinks.push(id);
+								var reverseLinks = allLinks[flatLinks[i].link];
+								var found = false;
+								for( var j = 0, y = reverseLinks.length; j < y; j++ ) {
+									if( reverseLinks[j].link == flatLinks[i].link ) {
+										found = true;
+										break;
+									}
+								}
+
+								if( !found ) {
+									reverseLinks.push({
+										path: flatLinks[i].path,
+										link: id,
+										reverse: true  // the path shows how to get from b to a
+									});
 								}
 							}
 						}
