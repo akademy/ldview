@@ -11,7 +11,7 @@
 
 		{#entities}
 			<h2 id="{type}">{type}</h2>
-			<ul>
+			<ul class="entities">
 				{#entities}
 					<li>{.}<br/>
 						<a href="/fentities/attrs/{.|uc}">Linked</a>{~s}|{~s}
