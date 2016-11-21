@@ -6,15 +6,18 @@
 			{/.}
 		{/get}
 	</h2>
-
-	{! <p>{#getValue key="rdfs:comment"}
+	<p>{#get key="@id"}
+		ID: {.}
+	{/get}
+	</p>
+	<p>{#get key="rdfs:comment"}
 	{#.}
-		{#getValue key="@value"/}
+		Comment: {#getValue key="@value"/}
 	{/.}
-	{/getValueList}</p> !}
-	{!#getValueList key="@type"}
+	{/get}</p>
+	{#get key="@type"}
 		<p>{.}</p>
-	{/getValueList!}
+	{/get}
 	{?attributes}
 		<ul style="display:none">
 		{#attributes}
