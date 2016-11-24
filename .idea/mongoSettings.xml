@@ -21,6 +21,14 @@
           </option>
           <option name="userDatabase" value="performance-dev" />
         </ServerConfiguration>
+        <ServerConfiguration>
+          <option name="label" value="Mongo Annalister" />
+          <option name="serverUrls">
+            <list>
+              <option value="localhost:8888" />
+            </list>
+          </option>
+        </ServerConfiguration>
       </list>
     </option>
     <option name="shellPath" value="/usr/bin/mono" />
