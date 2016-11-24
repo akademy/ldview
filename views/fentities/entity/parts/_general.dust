@@ -1,4 +1,4 @@
-<div class="entity">
+<div class="entity" data-subject="{subject}">
 	{!<p><small>{id}</small></p>!}
 	<h2>{#get key="rdfs:label"}
 			{#.}
@@ -6,18 +6,19 @@
 			{/.}
 		{/get}
 	</h2>
-	<p>{#get key="@id"}
-		ID: {.}
-	{/get}
-	</p>
+
 	<p>{#get key="rdfs:comment"}
-	{#.}
-		Comment: {#getValue key="@value"/}
-	{/.}
+		{#.}
+			{#getValue key="@value"/}
+		{/.}
 	{/get}</p>
-	{#get key="@type"}
-		<p>{.}</p>
-	{/get}
+
+	<p>ID:{#getValue key="@id"/}</p>
+
+	<p>{#get key="@type"}
+		{.}<br/>
+	{/get}</p>
+
 	{?attributes}
 		<ul style="display:none">
 		{#attributes}
