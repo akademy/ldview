@@ -2,22 +2,20 @@
 
 {<baseContent}
 	<h1>{subject}</h1>
-	<div class="entity" id="main" data-uri="{subject}">
+	<div class="entity" id="main" data-subject="{subject}">
 		{?results}
 			<table>
 				{#results}
 					<tr>
-						{#s}
-							<td>{value}</td>
-						{/s}
-							<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-						{#p}
-							<td>{value}</td>
-						{/p}
-							<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-						{#o}
-							<td>({type}) {value}</td>
-						{/o}
+						{#typeIs types="literal,uri"}
+							{#p}
+								<td>{value}</td>
+							{/p}
+								<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+							{#o}
+								<td>{value}</td>
+							{/o}
+						{/typeIs}
 					</tr>
 				<tr></tr>
 				{/results}
@@ -27,33 +25,14 @@
 		{/results}
 	</div>
 
-	<div class="entities" data-uri="http://erlangen-crm.org/efrbroo/F31_Performance">
+	<div class="entities" data-predicate="http://erlangen-crm.org/efrbroo/F31_Performance">
+	<h2>Performances performed in</h2>
 	</div>
 
 	<div id="others">
-
 	</div>
 
-	<script>
-		var ev = ev || {};
-		ev.entities = [
-			{
-				"subject" : "{subject}",
-				"attributes" : [
-					{#results}
-					{
-						{#p}
-							p : "{value}",
-						{/p}
-						{#o}
-							o : "{value}",
-							t : "{type}"
-						{/o}
-					},
-					{/results}
-				]
-			}
-		];
-	</script>
+
+{>"fentities/entity_script"/}
 
 {/baseContent}

@@ -1,0 +1,30 @@
+{>"index"/}
+
+{<baseContent}
+	<h1>{subject}</h1>
+	{?results}
+		<table>
+			{#results}
+				<tr>
+					{#typeIs types="literal,uri"}
+							{#p}
+								<td>{value}</td>
+							{/p}
+								<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+							{#o}
+								<td>{value}</td>
+							{/o}
+						{/typeIs}
+				</tr>
+			<tr></tr>
+			{/results}
+		</table>
+	{:else}
+		<p>Nothing</p>
+	{/results}
+
+	<div id="others"></div>
+
+{>"fentities/entity_script"/}
+
+{/baseContent}

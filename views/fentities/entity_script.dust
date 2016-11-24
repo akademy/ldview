@@ -1,0 +1,21 @@
+<script>
+	var ev = ev || {};
+	ev.entities = [
+		{
+			"subject" : "{subject}",
+			"attributes" : [
+				{#results}
+				{
+					{#p}
+						p : "{value}",
+					{/p}
+					{#o}
+						o : "{value}",
+						t : "{type}"
+					{/o}
+				},
+				{/results}
+			]
+		}
+	];
+</script>
