@@ -10,6 +10,7 @@ var MongoClient = mongodb.MongoClient;
 
 var config = require('../config/config');
 var helpersDust = require('../lib/helpersDust.js');
+var evDustHelpers = require('../public/js/dustHelpers.js');
 var helpersEntity = require('../lib/helpersEntity.js');
 
 var router = express.Router();
@@ -19,17 +20,45 @@ router.get('/', function(req, res /*, next */) {
 
 	var client = new sparql.Client("http://localhost:3030/test1/sparql");
 	client.query( `
-			select distinct ?s where {
-				?s ?p ?o 
+			PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+			select distinct ?s ?name where {
+				?s ?p ?o .
+  			optional { ?s <rdfs:label> ?name }
 				FILTER isURI(?s)
 			} 
+			order by ?s
 			limit 1000
 	`, function(err, result) {
 
 		//var filtered = result.results.bindings.filter( function(ent) { return ent.s.type === "uri"; });
+		var results = result.results.bindings;
+		var currentType = null;
+		var typeGroup = null;
+		var entities = [];
+
+		for( var i=0, z=results.length; i<z; i++ ) {
+			var uri = results[i].s.value;
+			var typeSplit = uri.split( "/" );
+			var type = typeSplit[typeSplit.length - 2];
+
+			if( type !== currentType ) {
+				typeGroup = {
+					type: type,
+					entities : []
+				};
+
+				entities.push( typeGroup );
+				currentType = type;
+			}
+
+			typeGroup.entities.push( {
+				id: uri,
+				name : results[i].name.value
+			} );
+		}
 
 		res.render('fentities/list', {
-			entities: result.results.bindings,//filtered,
+			entities: entities,//filtered,
 			//hasValue: helpersDust.hasValue,
 			value: helpersDust.value,
 			entityName: helpersDust.entityName
@@ -202,7 +231,7 @@ router.get('/attrs/:uri', function(req, res ) {
 			}
 		}
 
-		var render = 'fentities/basic';
+		var render = 'fentities/entity/basic';
 		if( annalistType === 'Person') {
 			render = 'fentities/entity/person';
 		}
@@ -210,10 +239,14 @@ router.get('/attrs/:uri', function(req, res ) {
 		//	render = 'fentities/entity/performance';
 		//}
 
-		res.render( render, {
+		var context = {
 			subject : req.params.uri,
 			results : bindings
-		});
+		};
+
+		evDustHelpers.addHelpers( context );
+
+		res.render( render, context );
 	});
 });
 
@@ -265,7 +298,7 @@ router.post('/links/:uri', function(req, res ) {
 
 router.get('/template/:uri', function(req, res ) {
 	// TODO work out which template we need. (Or construct the template)
-	fs.readFile('views/fentities/entity/_general.dust', 'utf8', function (err,data) {
+	fs.readFile('views/fentities/entity/parts/_general.dust', 'utf8', function (err,data) {
 		if (err) {
 			return console.log(err);
 		}
