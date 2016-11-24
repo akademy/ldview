@@ -29,10 +29,10 @@ ev.EntityControl = function() {
 
 			for( var entityType in entityTypes ) {
 
-				var typePosition = '.entities[data-uri="' + entityType + '"]';
+				var typePosition = '.entities[data-predicate="' + entityType + '"]';
 				var $typeDiv = $(typePosition);
 				if( $typeDiv.length === 0 ) {
-					$("#others").append( '<div class="entities" data-uri="' + entityType + '"></div>' );
+					$("#others").append( '<div class="entities" data-predicate="' + entityType + '"></div>' );
 					$typeDiv = $(typePosition);
 				}
 				$typeDiv.append( '<h2>' + entityType + '</h2>' );
@@ -62,7 +62,7 @@ ev.EntityControl = function() {
 		//});
 	};
 	
-	function getPsFromAttributes( attributes ) {
+	/*function getPsFromAttributes( attributes ) {
 		return $.map( attributes, function(attribute) {
 			return attribute.p;
 		});
@@ -71,7 +71,7 @@ ev.EntityControl = function() {
 		return $.map( attributes, function(attribute) {
 			return attribute.o;
 		});
-	}
+	}*/
 
 	function getAttributesWithUris( entity ) {
 		var uris = [];
@@ -116,8 +116,7 @@ ev.EntityControl = function() {
 
 		context["attributes"] = attributes;
 
-		context["get"] =  ev.DustHelpers.get;
-		context["getValue"] =  ev.DustHelpers.getValue;
+		ev.DustHelpers.addHelpers( context );
 
 		var tc = new ev.TemplateControl([]);
 
