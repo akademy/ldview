@@ -7,6 +7,11 @@ ev.DustHelpers = {
 			}
 		}
 	},
+	exists :  function(chunk, context, bodies, params) {
+		var entity = context.current();
+		console.log("get::", "key:", params.key, "value:", entity[params.key], "entity:", entity );
+		return params.key in entity; //chunk.write( entity[params.key] );
+	},
 	get :  function(chunk, context, bodies, params) {
 		var entity = context.current();
 		//console.log("get::", "key:", params.key, "value:", entity[params.key], "entity:", entity );
@@ -20,7 +25,7 @@ ev.DustHelpers = {
 
 	typeIs : function(chunk, context, bodies, params) {
 		var result = context.current();
-		console.log("typeIs::", "result:",result,params);
+		//console.log("typeIs::", "result:",result,params);
 		return params.types.indexOf( result.o.type ) !== -1;
 	}
 };

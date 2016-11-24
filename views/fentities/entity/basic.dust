@@ -1,10 +1,11 @@
-{>"index"/}
+{>"fentities/entity/entity"/}
 
-{<baseContent}
-	<h1>{subject}</h1>
-	{?results}
+{<entitysContent}
+	<div class="entity" id="main" data-subject="{subject}">
+	<h1>basic.dust::{subject}</h1>
+	{?predicates.list}
 		<table>
-			{#results}
+			{#predicates.list}
 				<tr>
 					{#typeIs types="literal,uri"}
 							{#p}
@@ -16,15 +17,11 @@
 							{/o}
 						{/typeIs}
 				</tr>
-			<tr></tr>
-			{/results}
+			{/predicates.list}
 		</table>
 	{:else}
-		<p>Nothing</p>
-	{/results}
+		<p>Empty</p>
+	{/predicates.list}
+	</div>
 
-	<div id="others"></div>
-
-{>"fentities/entity_script"/}
-
-{/baseContent}
+{/entitysContent}

@@ -26,3 +26,19 @@ ul.entities li {
     border-radius: 15px;
     word-break: break-all;
 }
+
+#main.entity {
+	border: 2px solid #333;
+}
+
+.entity:hover {
+	background-color: #222;
+	color: white;
+	cursor: pointer;
+}
+
+#main.entity:hover {
+	background-color: white;
+	color: black;
+	cursor: default;
+}

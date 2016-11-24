@@ -1,0 +1,13 @@
+{>"index"/}
+
+{<baseContent}
+
+	{+entitysContent}
+		{!entities go here! The main and the secondary!}
+	{/entitysContent}
+
+	<div id="others">{!for everything else not specified!}</div>
+
+	{>"fentities/entity_script"/}
+
+{/baseContent}

@@ -25,7 +25,7 @@ ev.EntityControl = function() {
 		.done(function(data) {
 			console.log( "getLinked:done", data );
 
-			var entityTypes = splitEntitiesIntoTypes( data );
+			var entityTypes = splitEntitiesIntoTypes( data ); // TODO: THESE ARENT TYPES THEY ARE PREDICATE GROUPINGS!
 
 			for( var entityType in entityTypes ) {
 
@@ -35,11 +35,18 @@ ev.EntityControl = function() {
 					$("#others").append( '<div class="entities" data-predicate="' + entityType + '"></div>' );
 					$typeDiv = $(typePosition);
 				}
+
 				$typeDiv.append( '<h2>' + entityType + '</h2>' );
 
 				var display = (function( entityType, $typeDiv ) {
 					return function( error, data ) 	{
-						$typeDiv.append(data);
+						var $entity = $(data);
+						$typeDiv.append($entity);
+
+						$entity.on("click", function() {
+							console.log("clicked", $entity.data("subject") );
+							window.location.href = "/fentities/attrs/" + encodeURIComponent( $entity.data("subject") );
+						});
 					};
 				})( entityType, $typeDiv );
 
