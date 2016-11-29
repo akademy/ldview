@@ -13,12 +13,8 @@
 			<h2 id="{type}">{type}</h2>
 			<ul class="entities">
 				{#entities}
-					<li>
-					<strong>{?name}
-						{name}
-					{:else}
-						{id}
-					{/name}</strong>
+					<li class="entity">
+							{>"fentities/list-item"/}
 						<br/>
 						<a href="/fentities/attrs/{id|uc}">Linked</a>{~s}|{~s}
 						<a href="/fentities/{id|uc}">Simple</a>{~s}|{~s}
