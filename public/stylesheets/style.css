@@ -19,12 +19,17 @@ p,li,dt,dd {
 ul.entities li {
     width: 180px;
     height: 180px;
-    display: inline-block;
+    display: inline-flex;
     margin: 15px;
     border: 1px solid black;
     padding: 10px;
     border-radius: 15px;
-    word-break: break-all;
+    overflow: auto;
+}
+
+
+ul.entities li * {
+    display:contents;
 }
 
 #main.entity {
@@ -42,3 +47,5 @@ ul.entities li {
 	color: black;
 	cursor: default;
 }
+
+
