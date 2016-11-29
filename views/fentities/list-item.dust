@@ -1,7 +1,6 @@
-<strong>
-	{@maxLength key="rdfs:label" length="5"/}
-{?get key="rdfs:label"}
-	{@getValue key="rdfs:label"/}
+<h3>
+{#get key="rdfs:label"}
+	{.}
 {:else}
 	{?id}
 		{id}
@@ -9,7 +8,7 @@
 		An entity
 	{/id}
 {/get}
-</strong>
-{?get key="rdfs:comment"}
-	<p>{@maxLength key="rdfs:comment" length="5"/}</p>
+</h3>
+{#get key="rdfs:comment"}
+	<p>{#maxLength length="50"/}</p>
 {/get}

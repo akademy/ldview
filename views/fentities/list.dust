@@ -15,10 +15,9 @@
 				{#entities}
 					<li class="entity">
 							{>"fentities/list-item"/}
-						<br/>
-						<a href="/fentities/attrs/{id|uc}">Linked</a>{~s}|{~s}
-						<a href="/fentities/{id|uc}">Simple</a>{~s}|{~s}
-						<a href="/fentities/raw/{id|uc}">Raw</a>
+						<a href="/fentities/attrs/{id|uc}">Linked</a>
+						{~s}|{~s}<a href="/fentities/{id|uc}">Simple</a>
+						{~s}|{~s}<a href="/fentities/raw/{id|uc}">Raw</a>
 					</li>
 				{/entities}
 			</ul>

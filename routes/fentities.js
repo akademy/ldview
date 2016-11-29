@@ -21,9 +21,10 @@ router.get('/', function(req, res /*, next */) {
 	var client = new sparql.Client("http://localhost:3030/test1/sparql");
 	client.query( `
 			PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-			select distinct ?s ?name where {
+			select distinct ?s ?label ?comment where {
 				?s ?p ?o .
-  			optional { ?s <rdfs:label> ?name }
+  			optional { ?s <rdfs:label> ?label }
+  			optional { ?s <rdfs:comment> ?comment }
 				FILTER isURI(?s)
 			} 
 			order by ?s
@@ -53,16 +54,20 @@ router.get('/', function(req, res /*, next */) {
 
 			typeGroup.entities.push( {
 				id: uri,
-				name : results[i].name.value
+				"rdfs:label" : results[i].label.value,
+				"rdfs:comment" : results[i].comment.value
 			} );
 		}
 
-		res.render('fentities/list', {
-			entities: entities,//filtered,
-			//hasValue: helpersDust.hasValue,
-			value: helpersDust.value,
-			entityName: helpersDust.entityName
-		});
+		var context = {
+			entities: entities,
+			//value: helpersDust.value,
+			//entityName: helpersDust.entityName
+		};
+
+		evDustHelpers.addHelpers( context );
+
+		res.render('fentities/list', context );
 	});
 	
 });
