@@ -1,4 +1,4 @@
-<div class="entity" data-subject="{#getValue key="@id"/}">
+<div class="entity" title="{#getValue key="@id"/}" data-subject="{#getValue key="@id"/}">
 	{!<p><small>{id}</small></p>!}
 	<h2>{#get key="rdfs:label"}
 			{#getValue key="@value"/}

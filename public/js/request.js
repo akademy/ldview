@@ -44,7 +44,7 @@ ev.EntityControl = function() {
 					$typeDiv = $(typePosition);
 				}
 
-				$typeDiv.append( '<h2>' + ev.Rephrase.rephrase(entityPred) + '</h2>' );
+				$typeDiv.append( '<h2 title="' + entityPred + '">' + ev.Rephrase.rephrase(entityPred) + '</h2>' );
 
 				var display = (function( entityType, $typeDiv ) {
 					return function( error, data ) 	{
