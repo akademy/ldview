@@ -1,5 +1,6 @@
 var ev = ev || {};
 ev.Rephrase = {
+	// TODO: Need different backward and forward rephrasing e.g. (performance) "took place at" (place) BUT (place) "was where this was done" (performance)
 	rephrases : {
 		"http://erlangen-crm___org/current/P7_took_place_at" :
 			"Took place at",
