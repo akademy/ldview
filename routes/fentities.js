@@ -251,9 +251,9 @@ router.get('/attrs/:uri', function(req, res ) {
 		if( annalistType === 'Person') {
 			render = 'fentities/entity/person';
 		}
-		//else if( annalistType === "Performance") {
-		//	render = 'fentities/entity/performance';
-		//}
+		else if( annalistType === "Performance") {
+			render = 'fentities/entity/performance';
+		}
 
 		var context = {
 			predicates : predicates,

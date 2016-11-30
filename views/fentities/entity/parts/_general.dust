@@ -11,7 +11,7 @@
 		{/get}
 	{/get}
 
-	<p><small>ID:{#getValue key="@id"/}</small></p>
+	<!--<p><small>ID:{#getValue key="@id"/}</small></p>-->
 
 	<p style="display:none">{#get key="@type"}
 		{.}<br/>
