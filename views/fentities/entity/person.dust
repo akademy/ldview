@@ -4,17 +4,21 @@
 	<div class="entity" id="main" data-subject="{subject}">
 		{?predicates.items}
 			{#predicates.items}
-				<h1>person.dust::
-				{?exists key="rdfs:label"}
-					{#getValue key="rdfs:label"/}
+				(person.dust)<h1>
+				{#get key="http://xmlns.com/foaf/0.1/name"}
+					{.}
 				{:else}
-					{subject}
-				{/exists}
+					{#get key="rdfs:label"}
+						{.}
+					{:else}
+						{subject}
+					{/get}
+				{/get}
 				</h1>
 
-				{?exists key="rdfs:comment"}
-				<p>{#getValue key="rdfs:comment"/}</p>
-				{/exists}
+				{#get key="rdfs:comment"}
+					<p>{.}</p>
+				{/get}
 			{/predicates.items}
 
 		{:else}

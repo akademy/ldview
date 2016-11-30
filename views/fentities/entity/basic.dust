@@ -2,26 +2,40 @@
 
 {<entitysContent}
 	<div class="entity" id="main" data-subject="{subject}">
-	<h1>basic.dust::{subject}</h1>
-	{?predicates.list}
-		<table>
-			{#predicates.list}
-				<tr>
-					{#typeIs types="literal,uri"}
-							{#p}
-								<td>{value}</td>
-							{/p}
+		basic.dust<h1>
+			{#predicates.items}
+				{#get key="rdfs:label"}
+					{.}
+				{:else}
+					{subject}
+				{/get}
+			{:else}
+				{subject}
+			{/predicates.items}
+
+		</h1>
+
+		{#predicates.items}
+			{#getValue key="rdfs:comment"}
+				<p>{.}</p>
+			{/getValue}
+		{/predicates.items}
+		<br/><br/><br/>
+			{?predicates.list}
+				<table>
+					{#predicates.list}
+						<tr>
+							{#typeIs types="literal,uri"}
+								<td>{p.value}</td>
 								<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
-							{#o}
-								<td>{value}</td>
-							{/o}
-						{/typeIs}
-				</tr>
+								<td>{o.value}</td>
+							{/typeIs}
+						</tr>
+					{/predicates.list}
+				</table>
+			{:else}
+				<p>Empty</p>
 			{/predicates.list}
-		</table>
-	{:else}
-		<p>Empty</p>
-	{/predicates.list}
 	</div>
 
 {/entitysContent}
