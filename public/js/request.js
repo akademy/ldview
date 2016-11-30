@@ -27,16 +27,24 @@ ev.EntityControl = function() {
 
 			var entityTypes = splitEntitiesIntoTypes( data ); // TODO: THESE ARENT TYPES THEY ARE PREDICATE GROUPINGS!
 
-			for( var entityType in entityTypes ) {
+			// fudge to get "links" and "linksAndPath" fields in current main entity
+			var entityMongo = getEntityFromEntityId( e.subject, data );
+			removeEntityByEntityId( e.subject, data );
 
-				var typePosition = '.entities[data-predicate="' + entityType + '"]';
+			removeDuplicateReverseLinks( entityMongo ); // TODO: We should likely be doing this at mongo index time
+
+			var entityPreds = splitEntitiesIntoTopLevelPredicates( entityMongo, data );
+
+			for( var entityPred in entityPreds ) {
+
+				var typePosition = '.entities[data-predicate="' + entityPred + '"]';
 				var $typeDiv = $(typePosition);
 				if( $typeDiv.length === 0 ) {
-					$("#others").append( '<div class="entities" data-predicate="' + entityType + '"></div>' );
+					$("#others").append( '<div class="entities" data-predicate="' + entityPred + '"></div>' );
 					$typeDiv = $(typePosition);
 				}
 
-				$typeDiv.append( '<h2>' + entityType + '</h2>' );
+				$typeDiv.append( '<h2>' + entityPred + '</h2>' );
 
 				var display = (function( entityType, $typeDiv ) {
 					return function( error, data ) 	{
@@ -48,10 +56,10 @@ ev.EntityControl = function() {
 							window.location.href = "/fentities/attrs/" + encodeURIComponent( $entity.data("subject") );
 						});
 					};
-				})( entityType, $typeDiv );
+				})( entityPred, $typeDiv );
 
-				for( var i=0,z=entityTypes[entityType].length;i<z;i++) {
-					showLink(entityTypes[entityType][i], display );
+				for( var i=0,z=entityPreds[entityPred].length;i<z;i++) {
+					showLink(entityPreds[entityPred][i], display );
 				}
 			}
 
@@ -79,26 +87,6 @@ ev.EntityControl = function() {
 			return attribute.o;
 		});
 	}*/
-
-	function getAttributesWithUris( entity ) {
-		var uris = [];
-		entity.attributes.forEach( function(attribute) {
-			if( attribute.t == OTYPE.URI ) {
-				uris.push(attribute);
-			}
-		});
-		return uris;
-	}
-
-	function getAttributesWithBlanks( entity ) {
-		var bnodes = [];
-		entity.attributes.forEach( function(attribute) {
-			if( attribute.t == OTYPE.BNODE ) {
-				bnodes.push(attribute);
-			}
-		});
-		return bnodes;
-	}
 
 	function showLink( entity, callback ) {
 		var attributes = [];
@@ -147,6 +135,65 @@ ev.EntityControl = function() {
 		});
 	}
 
+	function getAttributesWithUris( entity ) {
+		var uris = [];
+		entity.attributes.forEach( function(attribute) {
+			if( attribute.t == OTYPE.URI ) {
+				uris.push(attribute);
+			}
+		});
+		return uris;
+	}
+
+	function getAttributesWithBlanks( entity ) {
+		var bnodes = [];
+		entity.attributes.forEach( function(attribute) {
+			if( attribute.t == OTYPE.BNODE ) {
+				bnodes.push(attribute);
+			}
+		});
+		return bnodes;
+	}
+
+	function getEntityFromEntityId( id, entities ) {
+		for( var i=0, z=entities.length; i<z;i++ ) {
+			if( entities[i]["@id"] === id ) {
+				return entities[i];
+			}
+		}
+		return null;
+	}
+
+	function removeEntityByEntityId( id, entities ) {
+		var index = -1;
+		for( var i=0, z=entities.length; i<z;i++ ) {
+			if( entities[i]["@id"] === id ) {
+				index = i;
+				break;
+			}
+		}
+		if( index !== -1 ) {
+			return entities.splice(index,1);
+		}
+		return null;
+	}
+
+	function splitEntitiesIntoTopLevelPredicates( entity, entities ) {
+		var predicates = {};
+		var linksAndPath = entity["linksAndPath"];
+
+		for( var i=0,z=linksAndPath.length;i<z; i++ ){
+			var predicate = linksAndPath[i].path[0];
+
+			if( !predicates.hasOwnProperty(predicate)) {
+				predicates[predicate] = [];
+			}
+			predicates[predicate].push( getEntityFromEntityId( linksAndPath[i].link, entities ) );
+		}
+
+		return predicates;
+	}
+
 	function splitEntitiesIntoTypes( entities ) {
 		var types = {};
 
@@ -163,6 +210,38 @@ ev.EntityControl = function() {
 
 		return types;
 	}
+
+	function removeDuplicateReverseLinks( entity ) {
+		var linksAndPath = entity["linksAndPath"],
+			duplicates = [],
+			linkMatch, link, i, z, j;
+
+		for( i=0, z=linksAndPath.length; i<z; i++ ){
+			linkMatch = linksAndPath[i];
+			if( linkMatch.reverse ) {
+				var duplicate = false;
+				for( j=0; j<z; j++ ){
+					link = linksAndPath[j];
+					if( !link.reverse ) {
+						if( link.link === linkMatch.link ) {
+							duplicate = true;
+							break;
+						}
+
+					}
+				}
+
+				if( duplicate ) {
+					duplicates.push(i);
+				}
+			}
+		}
+
+		for( i=duplicates.length; i; i-- ) {
+			linksAndPath.splice(duplicates[i-1],1);
+		}
+	}
+
 };
 
 $(document).ready( function() {

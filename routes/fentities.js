@@ -293,12 +293,13 @@ router.post('/links/:uri', function(req, res ) {
 		if (err) {
 			throw err;
 		}
-		db.collection(config.collection).find({"@id":req.params.uri},{"links":true}).toArray(function(err, result) {
+		db.collection(config.collection).find({"@id":req.params.uri},{"links":true,"linksAndPath" : true}).toArray(function(err, result) {
 			if (err) {
 				throw err;
 			}
 			var links = result[0].links;
-			var q = { $or : [] };
+
+			var q = { $or : [{ "@id" : req.params.uri }] }; // Add *this* entity, TODO: Remove it, we should already have this but the system is in a "two database" weird configuration (i.e. it needs unmessing up...)
 			for( var i=0; i< links.length; i ++ ) {
 				q["$or"].push( { "@id" : links[i] } )
 			}
