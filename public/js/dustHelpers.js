@@ -43,7 +43,7 @@ ev.DustHelpers = {
 		var limit = parseInt(params.length) || originalLength;
 		var ellipsis = params.ellipsis || "...";
 		
-		console.log("maxLength::", "string:", str, "originalLength:", originalLength, "maxLength:", limit, "key:", params.key || "none" );
+		//console.log("maxLength::", "string:", str, "originalLength:", originalLength, "maxLength:", limit, "key:", params.key || "none" );
 		
 		if (originalLength <= limit ) {
 			return chunk.write(str);
