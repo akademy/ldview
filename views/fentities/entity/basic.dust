@@ -16,9 +16,9 @@
 		</h1>
 
 		{#predicates.items}
-			{#getValue key="rdfs:comment"}
+			{#get key="rdfs:comment"}
 				<p>{.}</p>
-			{/getValue}
+			{/get}
 		{/predicates.items}
 		<br/><br/><br/>
 			{?predicates.list}

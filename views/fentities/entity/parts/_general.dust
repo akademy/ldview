@@ -1,21 +1,19 @@
 <div class="entity" data-subject="{#getValue key="@id"/}">
 	{!<p><small>{id}</small></p>!}
 	<h2>{#get key="rdfs:label"}
-			{#.}
-				{#getValue key="@value"/}
-			{/.}
+			{#getValue key="@value"/}
 		{/get}
 	</h2>
 
-	<p>{#get key="rdfs:comment"}
-		{#.}
-			{#getValue key="@value"/}
-		{/.}
-	{/get}</p>
+	{#get key="rdfs:comment"}
+		{#get key="@value"}
+			<p>{.}</p>
+		{/get}
+	{/get}
 
-	<p>ID:{#getValue key="@id"/}</p>
+	<p><small>ID:{#getValue key="@id"/}</small></p>
 
-	<p>{#get key="@type"}
+	<p style="display:none">{#get key="@type"}
 		{.}<br/>
 	{/get}</p>
 
