@@ -45,6 +45,7 @@ ev.EntityControl = function() {
 					if( $areas.length > 0 && area < $areas.length ) {
 						$typeDiv = $($areas[area]);
 						$typeDiv.data( "predicate", entityPred );
+						area += 1;
 					}
 					else {
 						$("#others").append('<div class="entities" data-predicate="' + entityPred + '"></div>');
