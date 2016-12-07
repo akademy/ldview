@@ -39,6 +39,7 @@ ev.EntityControl = function() {
 
 			for( var entityPred in entityPreds ) {
 
+				// Work out a place to put this entity based on template.
 				var typePosition = '.entities[data-predicate="' + entityPred + '"]';
 				var $typeDiv = $(typePosition);
 				if( $typeDiv.length === 0 ) {
@@ -51,15 +52,19 @@ ev.EntityControl = function() {
 						$("#others").append('<div class="entities" data-predicate="' + entityPred + '"></div>');
 						$typeDiv = $(typePosition);
 					}
-
 				}
 
 				$typeDiv.append( '<h2 title="' + entityPred + '">' + ev.Rephrase.rephrase(entityPred) + '</h2>' );
 
 				var display = (function( entityType, $typeDiv ) {
-					return function( error, data ) 	{
+					return function( error, data, linkAndPath ) 	{
 						var $entity = $(data);
+
 						$typeDiv.append($entity);
+						if( linkAndPath.path.length > 1 ) {
+							// Todo, should we add multiple ones?
+							$entity.prepend("<h3>" + ev.Rephrase.rephrase(linkAndPath.path[1], (linkAndPath.reverse) ? "reverse" : "forward") + ":</h3>");
+						}
 
 						$entity.on("click", function() {
 							switchMain( $entity.data("subject") );
@@ -155,7 +160,8 @@ ev.EntityControl = function() {
 		});
 	}*/
 
-	function showLink( entity, callback ) {
+	function showLink( entityAndPath, callback ) {
+		var entity = entityAndPath.entity;
 		var attributes = [];
 		var encodeId = encodeURIComponent(entity["@id"]);
 		var context = {
@@ -198,7 +204,7 @@ ev.EntityControl = function() {
 		//console.log("context", context);
 
 		tc.render( encodeId + "_2", context, function( error, result ) {
-			callback( error, result );
+			callback( error, result, entityAndPath.linkAndPath );
 		});
 	}
 
@@ -255,7 +261,10 @@ ev.EntityControl = function() {
 			if( !predicates.hasOwnProperty(predicate)) {
 				predicates[predicate] = [];
 			}
-			predicates[predicate].push( getEntityFromEntityId( linksAndPath[i].link, entities ) );
+			predicates[predicate].push( {
+				entity: getEntityFromEntityId( linksAndPath[i].link, entities ),
+				linkAndPath: linksAndPath[i]
+			});
 		}
 
 		return predicates;

@@ -50,4 +50,6 @@ ul.entities li h3 {
 
 .entities {
     margin-bottom: 10px;
+    border: 1px solid #999;
+    padding: 10px;
 }
