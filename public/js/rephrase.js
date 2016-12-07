@@ -7,6 +7,10 @@ ev.Rephrase = {
 			"reverse" : "Occured here"
 		},
 		"http://erlangen-crm___org/efrbroo/R25F_performed_r" : {
+			"forward": "Performed these",
+			"reverse": "Performed by"
+		},
+		"http://erlangen-crm___org/efrbroo/R25F_performed" : {
 			"forward": "Performed",
 			"reverse": "Was performed by"
 		},
@@ -15,7 +19,11 @@ ev.Rephrase = {
 			"reverse": "Associated"
 		},
 		"http://www___w3___org/ns/prov#used_r" : {
-			"forward" : "Used ",
+			"forward" : "Used these",
+			"reverse" : "Was used by"
+		},
+		"http://www___w3___org/ns/prov#used" : {
+			"forward" : "Used",
 			"reverse" : "Was used by"
 		},
 		"http://erlangen-crm___org/current/P12i_was_present_at" : {
@@ -25,12 +33,15 @@ ev.Rephrase = {
 	},
 	rephrase : function( key, direction ) {
 		direction = direction || "forward";
+		var phrase = '';
 		if( key in ev.Rephrase.rephrases ) {
-			return ev.Rephrase.rephrases[key][direction];
+			phrase = ev.Rephrase.rephrases[key][direction];
+		}
+		else {
+			phrase = ev.Rephrase.pretty(key);
 		}
 
-		return ev.Rephrase.pretty(key);
-
+		return '<span title="' + key.replace("___",".") + '">' + phrase + "</span>";
 	},
 	pretty : function( key ) {
 		var splits = key.split("#");

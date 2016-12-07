@@ -43,6 +43,7 @@ ev.EntityControl = function() {
 				var typePosition = '.entities[data-predicate="' + entityPred + '"]';
 				var $typeDiv = $(typePosition);
 				if( $typeDiv.length === 0 ) {
+
 					if( $areas.length > 0 && area < $areas.length ) {
 						$typeDiv = $($areas[area]);
 						$typeDiv.data( "predicate", entityPred );
@@ -54,7 +55,7 @@ ev.EntityControl = function() {
 					}
 				}
 
-				$typeDiv.append( '<h2 title="' + entityPred + '">' + ev.Rephrase.rephrase(entityPred) + '</h2>' );
+				$typeDiv.append( '<h2>' + ev.Rephrase.rephrase(entityPred) + '</h2>' );
 
 				var display = (function( entityType, $typeDiv ) {
 					return function( error, data, linkAndPath ) 	{
@@ -75,13 +76,17 @@ ev.EntityControl = function() {
 				for( var i=0,z=entityPreds[entityPred].length;i<z;i++) {
 					showLink(entityPreds[entityPred][i], display );
 				}
-			}
 
-			// for( i=0,z=data.length;i<z;i++)
-			// 	showLink( data[i], function( error, data ) {
-			//
-			// 		$("#others").append( data );
-			// 	} );
+				// Remove empties
+				//var $predicateAreas = $(".entities[data-predicate]");
+				//for( var i=0, z=$predicateAreas.length; i<z; i++ ) {
+				//	var $area = $($predicateAreas[i]);
+				//	var $h2 = $area.children("h2");
+				//	if( $h2.length === 0 ) {
+				//		$area.remove();
+				//	}
+				//}
+			}
 		})
 		.fail(function() {
 			console.log( "getLinked:fail" );
