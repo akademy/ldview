@@ -10,7 +10,7 @@
 						p : "{value}",
 					{/p}
 					{#o}
-						o : "{value}",
+						o : `{value}`,
 						t : "{type}"
 					{/o}
 				},
