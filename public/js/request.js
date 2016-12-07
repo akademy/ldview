@@ -102,9 +102,14 @@ ev.EntityControl = function() {
 		$main.css("position","relative");
 		$newMain.css("position","absolute");
 
-		$main.animate({opacity:0});
-		//$notNewMain.fadeOut();
+		//$notNewMain
+		$main.animate(
+			{
+				opacity:0
+			}
+		);
 
+		var moveDuration = Math.max( $newMain.offset().top, 500 );
 		$newMain.animate(
 			{
 				left: mainLeft,
@@ -113,16 +118,18 @@ ev.EntityControl = function() {
 				height: mainHeight
 			},
 			{
-				duration: 500,
+				duration: moveDuration,
 				easing: "swing",
 				complete: function() {
 					setTimeout( function() {
 						console.log("clicked", newMain );
 						window.location.href = "/fentities/attrs/" + encodeURIComponent( newMain );
-					}, 500 );
+					}, 400 );
 				}
 			}
 		);
+
+		$("html, body").animate({ scrollTop: 0 }, { duration: moveDuration });
 
 
 	}
@@ -178,7 +185,7 @@ ev.EntityControl = function() {
 			}
 		});
 
-		console.log("context", context);
+		//console.log("context", context);
 
 		tc.render( encodeId + "_2", context, function( error, result ) {
 			callback( error, result );
