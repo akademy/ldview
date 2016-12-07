@@ -39,7 +39,8 @@ ev.EntityControl = function() {
 
 			for( var entityPred in entityPreds ) {
 
-				// Work out a place to put this entity based on template.
+				// Work out a place to put this entity based on template design.
+				// Specifi with a predicate, general for one type (any), all (for everything
 				var typePosition = '.entities[data-predicate="' + entityPred + '"]';
 				var $typeDiv = $(typePosition);
 				if( $typeDiv.length === 0 ) {
@@ -76,16 +77,16 @@ ev.EntityControl = function() {
 				for( var i=0,z=entityPreds[entityPred].length;i<z;i++) {
 					showLink(entityPreds[entityPred][i], display );
 				}
+			}
 
-				// Remove empties
-				//var $predicateAreas = $(".entities[data-predicate]");
-				//for( var i=0, z=$predicateAreas.length; i<z; i++ ) {
-				//	var $area = $($predicateAreas[i]);
-				//	var $h2 = $area.children("h2");
-				//	if( $h2.length === 0 ) {
-				//		$area.remove();
-				//	}
-				//}
+			// Remove empties
+			var $predicateAreas = $(".entities[data-predicate]");
+			for( var i=0, z=$predicateAreas.length; i<z; i++ ) {
+				var $area = $($predicateAreas[i]);
+				var $h2 = $area.children("h2");
+				if( $h2.length === 0 ) {
+					$area.remove();
+				}
 			}
 		})
 		.fail(function() {
