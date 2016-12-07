@@ -35,13 +35,22 @@ ev.EntityControl = function() {
 
 			var entityPreds = splitEntitiesIntoTopLevelPredicates( entityMongo, data );
 
+			var $areas = $(".entities.general"), area = 0;
+
 			for( var entityPred in entityPreds ) {
 
 				var typePosition = '.entities[data-predicate="' + entityPred + '"]';
 				var $typeDiv = $(typePosition);
 				if( $typeDiv.length === 0 ) {
-					$("#others").append( '<div class="entities" data-predicate="' + entityPred + '"></div>' );
-					$typeDiv = $(typePosition);
+					if( $areas.length > 0 && area < $areas.length ) {
+						$typeDiv = $($areas[area]);
+						$typeDiv.data( "predicate", entityPred );
+					}
+					else {
+						$("#others").append('<div class="entities" data-predicate="' + entityPred + '"></div>');
+						$typeDiv = $(typePosition);
+					}
+
 				}
 
 				$typeDiv.append( '<h2 title="' + entityPred + '">' + ev.Rephrase.rephrase(entityPred) + '</h2>' );
