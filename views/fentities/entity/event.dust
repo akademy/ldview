@@ -4,7 +4,7 @@
 	<div class="row">
 		<div class="medium-8 columns">
 			<div class="entity" id="main" data-subject="{subject}">
-				<small style="color:#999">performance.dust</small>
+				<small style="color:#999">event.dust</small>
 				<h1>
 					{#predicates.items}
 						{#get key="rdfs:label"}
@@ -51,6 +51,8 @@
 			<div class="entities"
 				data-predicate="http://erlangen-crm___org/efrbroo/R25F_performed_r">
 			</div>
+
+			<div class="entities general"></div>
 		</div>
 	</div>
 

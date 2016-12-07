@@ -4,16 +4,17 @@
 	<div class="entity" id="main" data-subject="{subject}">
 		{?predicates.items}
 			{#predicates.items}
-				(person.dust)<h1>
-				{#get key="http://xmlns.com/foaf/0.1/name"}
-					{.}
-				{:else}
-					{#get key="rdfs:label"}
+				<small style="color:#999">person.dust</small>
+				<h1>
+					{#get key="http://xmlns.com/foaf/0.1/name"}
 						{.}
 					{:else}
-						{subject}
+						{#get key="rdfs:label"}
+							{.}
+						{:else}
+							{subject}
+						{/get}
 					{/get}
-				{/get}
 				</h1>
 
 				{#get key="rdfs:comment"}
