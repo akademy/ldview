@@ -48,4 +48,6 @@ ul.entities li h3 {
 	cursor: default;
 }
 
-
+.entities {
+    margin-bottom: 10px;
+}
