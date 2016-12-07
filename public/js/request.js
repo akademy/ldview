@@ -52,8 +52,7 @@ ev.EntityControl = function() {
 						$typeDiv.append($entity);
 
 						$entity.on("click", function() {
-							console.log("clicked", $entity.data("subject") );
-							window.location.href = "/fentities/attrs/" + encodeURIComponent( $entity.data("subject") );
+							switchMain( $entity.data("subject") );
 						});
 					};
 				})( entityPred, $typeDiv );
@@ -76,7 +75,58 @@ ev.EntityControl = function() {
 		//	console.log( "getLinked:always" );
 		//});
 	};
-	
+
+	function switchMain( newMain ) {
+		var newMainSelector = "[data-subject='" + newMain + "']";
+		var $main = $("#main");
+		var $newMain = $( newMainSelector );
+		var $notNewMain = $(":not(" + newMainSelector + ")" );
+
+		// Ensure width and height remains set after position:absolute set
+		$main.css("position","relative");
+		var mainWidth = $main.css("width"),
+			mainHeight = $main.css("height");
+
+		$main.css("width", mainWidth );
+		$main.css("height", mainHeight );
+
+		// Ensure width and height remains set after position:absolute set
+		$newMain.css("position","relative");
+		$newMain.css("width",$newMain.css("width"));
+		$newMain.css("height",$newMain.css("height"));
+
+		$main.css("position","absolute");
+		var mainLeft = $main.css("left"),
+			mainTop = $main.css("top");
+
+		$main.css("position","relative");
+		$newMain.css("position","absolute");
+
+		$main.animate({opacity:0});
+		//$notNewMain.fadeOut();
+
+		$newMain.animate(
+			{
+				left: mainLeft,
+				top: mainTop,
+				width: mainWidth,
+				height: mainHeight
+			},
+			{
+				duration: 500,
+				easing: "swing",
+				complete: function() {
+					setTimeout( function() {
+						console.log("clicked", newMain );
+						window.location.href = "/fentities/attrs/" + encodeURIComponent( newMain );
+					}, 500 );
+				}
+			}
+		);
+
+
+	}
+
 	/*function getPsFromAttributes( attributes ) {
 		return $.map( attributes, function(attribute) {
 			return attribute.p;
