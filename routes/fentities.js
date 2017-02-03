@@ -19,17 +19,17 @@ var router = express.Router();
 router.get('/', function(req, res /*, next */) {
 
 	var client = new sparql.Client("http://localhost:3030/test1/sparql");
-	client.query( `
-			PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-			select distinct ?s ?label ?comment where {
-				?s ?p ?o .
-  			optional { ?s <rdfs:label> ?label }
-  			optional { ?s <rdfs:comment> ?comment }
-				FILTER isURI(?s)
-			} 
-			order by ?s
-			limit 1000
-	`, function(err, result) {
+	client.query( " \
+			PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> \
+			select distinct ?s ?label ?comment where { \
+				?s ?p ?o . \
+  			optional { ?s <rdfs:label> ?label } \
+  			optional { ?s <rdfs:comment> ?comment } \
+				FILTER isURI(?s) \
+			}  \
+			order by ?s \
+			limit 1000 \
+	", function(err, result) {
 
 		//var filtered = result.results.bindings.filter( function(ent) { return ent.s.type === "uri"; });
 		var results = result.results.bindings;
@@ -75,10 +75,10 @@ router.get('/', function(req, res /*, next */) {
 router.get('/raw/:uri', function(req, res /*, next */) {
 
 	var client = new sparql.Client("http://localhost:3030/test1/sparql");
-	client.query( util.format( `
-			select * where { 
-				<%s> ?p ?o 
-			}`, req.params.uri), function(err, result) {
+	client.query( util.format( " \
+			select * where { \ 
+				<%s> ?p ?o  \
+			} ", req.params.uri), function(err, result) {
 
 		res.render('fentities/raw', {
 			subject : req.params.uri,
@@ -110,33 +110,33 @@ router.get('/:uri', function(req, res /*, next */) {
 		  }
 		} limit 1000`,  req.params.uri,  req.params.uri ),*/
 
-		util.format( `
-			PREFIX list: <http://jena.hpl.hp.com/ARQ/list#>
-			
-			SELECT ?s ?p ?o ?p2 ?o2 {
-				{
-					?s ?p ?o . # Get members
-					optional{
-						?o list:member ?ignore_lists # But not those which are lists (bnodes) or blank subjects
-					}
-					filter( !isBlank( ?o ) )
-				}
-			
-				UNION {
-					?s ?p ?lists .
-					?lists list:member ?o	# Get list members
-				}
-			
-				UNION {
-					?s ?p2 ?b1.
-					?b1 ?p ?o . # Get blank node stuff. TODO: Can we "forget" intermediate predicate?
-					optional {
-						?b1 list:member ?ignore_lists # But not those which are lists (bnodes)
-					}
-					filter( ! bound( ?ignore_lists ) )				}
-			
-				filter( ?s = <%s> )
-			}`,
+		util.format( " \
+			PREFIX list: <http://jena.hpl.hp.com/ARQ/list#> \
+			 \
+			SELECT ?s ?p ?o ?p2 ?o2 { \
+				{ \
+					?s ?p ?o . # Get members \
+					optional{ \
+						?o list:member ?ignore_lists # But not those which are lists (bnodes) or blank subjects \
+					} \
+					filter( !isBlank( ?o ) ) \
+				} \
+			 \
+				UNION { \
+					?s ?p ?lists . \
+					?lists list:member ?o	# Get list members \
+				} \
+			 \
+				UNION { \
+					?s ?p2 ?b1. \
+					?b1 ?p ?o . # Get blank node stuff. TODO: Can we 'forget' intermediate predicate? \
+					optional { \
+						?b1 list:member ?ignore_lists # But not those which are lists (bnodes) \
+					} \
+					filter( ! bound( ?ignore_lists ) )				} \
+			 \
+				filter( ?s = <%s> ) \
+			}",
 			req.params.uri ),
 		function(err, result) {
 
@@ -218,12 +218,12 @@ router.get('/:uri', function(req, res /*, next */) {
 router.get('/attrs/:uri', function(req, res ) {
 
 	var query = util.format(
-		`	
-			SELECT ?s ?p ?o {
-					?s ?p ?o . # Get members
-					filter( ?s = <%s> )
-			}
-		`
+		"	\
+			SELECT ?s ?p ?o { \
+					?s ?p ?o . # Get members \
+					filter( ?s = <%s> ) \
+			} \
+		"
 		, req.params.uri );
 
 	var client = new sparql.Client("http://localhost:3030/test1/sparql");
