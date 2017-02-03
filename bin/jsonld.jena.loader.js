@@ -10,6 +10,7 @@ var async = require('async');
 
 var fuseki_lib = require("../lib/fuseki");
 
+var config = require('../config/config');
 
 var annalistDataUrlBase = 'http://annalist.net/annalist_sitedata/c/Carolan_Guitar/d/'; //  "http://fast-project.annalist.net/annalist/c/Performances/d/";
 var annalistDataContextUrl = annalistDataUrlBase + "coll_context.jsonld";
@@ -19,7 +20,6 @@ var fusekiDataset = "test1";
 var saveFiles = config.local.debugSaveJsonFiles || false;
 var saveFilesBase = "temp/json/";
 
-var config = require('../config/config');
 
 //fuseki_lib.debug = true;
 
@@ -121,18 +121,24 @@ function fusekiIndex( jsonLdUrls, callbackComplete ) {
 						var dataId = jsonLdUrl.substr( 0, jsonLdUrl.indexOf( annalistJsonLdFileName ) - 1 );
 	
 						getJsonLd( jsonLdContext, jsonLdUrl , dataId, function (error, jsonld) {
-	
-							fuseki.sendJsonLd(jsonld, function (error, result) {
-	
-								if (error) {
-									console.error("Something broke", error);
-								}
-								else {
-									console.log("Done something", result);
-								}
-	
+
+							if( jsonld ) {
+								fuseki.sendJsonLd(jsonld, function (error, result) {
+
+									if (error) {
+										console.error("Something broke", error);
+									}
+									else {
+										console.log("Done something", result);
+									}
+
+									complete();
+								});
+							}
+							else {
+								// Ignore error.
 								complete();
-							});
+							}
 						});
 					});
 				}
@@ -146,7 +152,7 @@ function fusekiIndex( jsonLdUrls, callbackComplete ) {
 
 }
 
-function getJsonLd(jsonldContext, jsonLdUrl, dataId, callbackComplete ) {
+function getJsonLd( jsonldContext, jsonLdUrl, dataId, callbackComplete ) {
 	/*
 		Get Expanded Json LD data from the URL.
 		We need to tweak the context to fix a bug in annalist.
