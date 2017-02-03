@@ -92,11 +92,11 @@ request( annalistDataUrlBase, function(error, response, body ) {
 
 function fusekiIndex( jsonLdUrls, callbackComplete ) {
 
-	fuseki.createDataset( fusekiDataset, "mem", function(error) {
+	fuseki.createDataset( fusekiDataset, "mem", function() {
 	
 		fuseki.clearDataset( function () {
 	
-			jsonld_request(annalistDataContextUrl, function (error, response, data) {
+			jsonld_request(annalistDataContextUrl, function (error, response) {
 	
 				if (error) {
 					console.error("Problem with requesting jsonld context url,", annalistDataContextUrl, error);
@@ -157,7 +157,7 @@ function getJsonLd( jsonldContext, jsonLdUrl, dataId, callbackComplete ) {
 		Get Expanded Json LD data from the URL.
 		We need to tweak the context to fix a bug in annalist.
 	 */
-	jsonld_request( jsonLdUrl, function ( err, response, data ) {
+	jsonld_request( jsonLdUrl, function ( err, response ) {
 
 		if (err) {
 			console.error(err);
@@ -209,7 +209,7 @@ function parseFolderList(folderList) {
 
 	var fileList = [];
 	var pos = 0,
-		start, file;
+		start, end, file;
 
 	for( var skip = 0; skip < 6; skip++ ) {
 		pos = folderList.indexOf('href="',pos+1);
