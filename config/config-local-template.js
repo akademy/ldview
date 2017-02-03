@@ -9,5 +9,7 @@ module.exports = {
 		dataset : /\?/,        // "test1"
 		username : /\?/,        // "admin"
 		password : /\?/        // "my_hard-password;"
-	}
+	},
+
+	// debugSaveJsonFiles : false
 };

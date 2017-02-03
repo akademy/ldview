@@ -16,12 +16,11 @@ var annalistDataContextUrl = annalistDataUrlBase + "coll_context.jsonld";
 var annalistJsonLdFileName = "entity_data.jsonld";
 
 var fusekiDataset = "test1";
-var saveFiles = false;
+var saveFiles = config.local.debugSaveJsonFiles || false;
 var saveFilesBase = "temp/json/";
 
 var config = require('../config/config');
 
-saveFiles = true;
 //fuseki_lib.debug = true;
 
 var fuseki = fuseki_lib.create( config.local.fuseki.host, config.local.fuseki.port, config.local.fuseki.dataset, config.local.fuseki.username, config.local.fuseki.password );
