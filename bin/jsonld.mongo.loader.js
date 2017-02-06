@@ -109,7 +109,7 @@ MongoClient.connect( config.local.databaseUrl, function(error, db) {
 									}
 								}
 
-								console.log( "Done " + id );
+								console.log( "Calculated links for " + id );
 								doneEach();
 							});
 					},
@@ -118,17 +118,19 @@ MongoClient.connect( config.local.databaseUrl, function(error, db) {
 
 						//outputGraphData( allLinks );
 
-						async.each( allLinks, function (id, doneUpdate ) {
+						async.each( Object.keys(allLinks), function (key, doneUpdate ) {
+
 							db.collection(config.collection)
-									.findOneAndUpdate( {"@id": id}, {"$set": {"linksAndPath": allLinks[id]}}, function( error ) {
+									.findOneAndUpdate( {"@id": key}, {"$set": {"linksAndPath": allLinks[key]}}, function( error ) {
 										if( error ) {
 											console.error( error );
 										}
-
+										console.log("Updated record for" + key);
 										doneUpdate();
 									})
 						}, function() {
 							console.log("Database update completed");
+							db.close();
 						} )
 					});
 
