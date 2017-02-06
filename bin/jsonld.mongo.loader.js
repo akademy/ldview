@@ -13,26 +13,31 @@ const jsonFolder = '../temp/json/adjusted';
 
 MongoClient.connect( config.local.databaseUrl, function(error, db) {
 	if( error ) {
-		console.error( error );
+		console.error( "Error:" + error );
 	}
 	else {
 		fs.readdir(jsonFolder, function(err, files) {
-			async.each( files, function( file, done ) {
-				console.log(file);
-				var json = fs.readFileSync(jsonFolder + "/" + file);
-				json = JSON.parse(json);
-				json = replaceDotsInKeys(json);
 
-				try {
-					var returned = db.collection(config.collection).insertOne( json[0] );
+			async.each( files, function( file, done ) {
+				
+				if( file !==  "coll_context.jsonld" ) {
+					console.log(file);
+					var json = fs.readFileSync(jsonFolder + "/" + file);
+					json = JSON.parse(json);
+					json = replaceDotsInKeys(json);
+
+					db.collection(config.collection).insertOne(json[0], function (error, result) {
+						// console.log("done...");
+						done();
+					});
 				}
-				catch(e) {
-					print( "error", e );
+				else {
+					done();
 				}
-				console.log(returned);
-				done();
 				
 			}, function() {
+
+				console.log("calculating links...");
 
 				db.collection(config.collection).distinct("@id", function (err, ids) {
 					var allLinks = {};
