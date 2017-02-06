@@ -115,27 +115,27 @@ router.get('/:uri', function(req, res /*, next */) {
 		} limit 1000`,  req.params.uri,  req.params.uri ),*/
 
 		util.format( "" +
-			"PREFIX list: <http://jena.hpl.hp.com/ARQ/list#>" +
+			"PREFIX list: <http://jena.hpl.hp.com/ARQ/list#> " +
 			"" +
 			"SELECT ?s ?p ?o ?p2 ?o2 { " +
 			"	{ " +
-			"		?s ?p ?o . # Get members " +
+			"		?s ?p ?o .  " + //# Get members " +
 			"		optional{ " +
-			"			?o list:member ?ignore_lists # But not those which are lists (bnodes) or blank subjects " +
+			"			?o list:member ?ignore_lists " + //# But not those which are lists (bnodes) or blank subjects " +
 			"		} " +
 			"		filter( !isBlank( ?o ) ) " +
 			"	} " +
 			"" +
 			"	UNION { " +
 			"		?s ?p ?lists . " +
-			"		?lists list:member ?o	# Get list members " +
+			"		?lists list:member ?o " + //# Get list members " +
 			"	} " +
 			"" +
 			"	UNION { " +
 			"		?s ?p2 ?b1. " +
-			"		?b1 ?p ?o . # Get blank node stuff. TODO: Can we 'forget' intermediate predicate? " +
+			"		?b1 ?p ?o . " +  // Get blank node stuff. TODO: Can we 'forget' intermediate predicate? " +
 			"		optional { " +
-			"			?b1 list:member ?ignore_lists # But not those which are lists (bnodes) " +
+			"			?b1 list:member ?ignore_lists " + // But not those which are lists (bnodes) " +
 			"	} " +
 			"		filter( ! bound( ?ignore_lists ) )				} " +
 			 "" +
@@ -223,7 +223,7 @@ router.get('/attrs/:uri', function(req, res ) {
 
 	var query = util.format(
 		"	SELECT ?s ?p ?o { " +
-				"?s ?p ?o . # Get members" +
+				"?s ?p ?o . " +   //  Get members
 				"filter( ?s = <%s> )" +
 		"}", req.params.uri );
 
@@ -298,11 +298,11 @@ router.post('/links/:uri', function(req, res ) {
 			if (err) {
 				throw err;
 			}
-			var links = result[0].links;
+			var links = result[0].linksAndPath;
 
 			var q = { $or : [{ "@id" : req.params.uri }] }; // Add *this* entity, TODO: Remove it, we should already have this but the system is in a "two database" weird configuration (i.e. it needs unmessing up...)
 			for( var i=0; i< links.length; i ++ ) {
-				q["$or"].push( { "@id" : links[i] } )
+				q["$or"].push( { "@id" : links[i].link } )
 			}
 
 			db.collection(config.collection).find(q).toArray(function(err, result) {
