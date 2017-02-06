@@ -125,7 +125,7 @@ MongoClient.connect( config.local.databaseUrl, function(error, db) {
 										if( error ) {
 											console.error( error );
 										}
-										console.log("Updated record for" + key);
+										console.log("Updated record for " + key);
 										doneUpdate();
 									})
 						}, function() {

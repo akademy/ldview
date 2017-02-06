@@ -19,55 +19,59 @@ var router = express.Router();
 router.get('/', function(req, res /*, next */) {
 
 	var client = new sparql.Client("http://localhost:3030/test1/sparql");
-	client.query( "" +
-			"PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#" +
-			"select distinct ?s ?label ?comment where { " +
-			"	?s ?p ?o . " +
-  			"optional { ?s <rdfs:label> ?label } " +
-  			"optional { ?s <rdfs:comment> ?comment } " +
-			"	FILTER isURI(?s) " +
-			"}  " +
-			"order by ?s " +
-			"limit 1000 " +
-	"", function(err, result) {
+	var q ="" +
+		"PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> " +
+	"select distinct ?s ?label ?comment where { " +
+	"	?s ?p ?o . " +
+	"optional { ?s <rdfs:label> ?label } " +
+	"optional { ?s <rdfs:comment> ?comment } " +
+	"	FILTER isURI(?s) " +
+	"}  " +
+	"order by ?s " +
+	"limit 1000 " +
+	"";
 
-		//var filtered = result.results.bindings.filter( function(ent) { return ent.s.type === "uri"; });
-		var results = result.results.bindings;
-		var currentType = null;
-		var typeGroup = null;
-		var entities = [];
+	client.query( q, function(err, result) {
+		var context = {};
 
-		for( var i=0, z=results.length; i<z; i++ ) {
-			var uri = results[i].s.value;
-			var typeSplit = uri.split( "/" );
-			var type = typeSplit[typeSplit.length - 2];
+		if( result && result.results ) {
 
-			if( type !== currentType ) {
-				typeGroup = {
-					type: type,
-					entities : []
-				};
+			//var filtered = result.results.bindings.filter( function(ent) { return ent.s.type === "uri"; });
+			var results = result.results.bindings;
+			var currentType = null;
+			var typeGroup = null;
+			var entities = [];
 
-				entities.push( typeGroup );
-				currentType = type;
+			for (var i = 0, z = results.length; i < z; i++) {
+				var uri = results[i].s.value;
+				var typeSplit = uri.split("/");
+				var type = typeSplit[typeSplit.length - 2];
+
+				if (type !== currentType) {
+					typeGroup = {
+						type: type,
+						entities: []
+					};
+
+					entities.push(typeGroup);
+					currentType = type;
+				}
+
+				typeGroup.entities.push({
+					id: uri,
+					"rdfs:label": results[i].label.value,
+					"rdfs:comment": results[i].comment.value
+				});
 			}
 
-			typeGroup.entities.push( {
-				id: uri,
-				"rdfs:label" : results[i].label.value,
-				"rdfs:comment" : results[i].comment.value
-			} );
+			context.entities = entities;
+				//value: helpersDust.value,
+				//entityName: helpersDust.entityName
 		}
 
-		var context = {
-			entities: entities,
-			//value: helpersDust.value,
-			//entityName: helpersDust.entityName
-		};
+		evDustHelpers.addHelpers(context);
+		res.render('fentities/list', context);
 
-		evDustHelpers.addHelpers( context );
-
-		res.render('fentities/list', context );
 	});
 	
 });
