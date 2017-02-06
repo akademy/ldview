@@ -20,7 +20,8 @@ MongoClient.connect( config.local.databaseUrl, function(error, db) {
 
 			async.each( files, function( file, done ) {
 				
-				if( file !==  "coll_context.jsonld" ) {
+				if( file !== "coll_context.jsonld" ) {
+
 					console.log(file);
 					var json = fs.readFileSync(jsonFolder + "/" + file);
 					json = JSON.parse(json);
@@ -39,88 +40,100 @@ MongoClient.connect( config.local.databaseUrl, function(error, db) {
 
 				console.log("calculating links...");
 
-				db.collection(config.collection).distinct("@id", function (err, ids) {
+				db.collection(config.collection).distinct( "@id", function (err, ids) {
 					var allLinks = {};
 					// async.eachSeries( ["http://annalist.net/annalist_sitedata/c/Carolan_Guitar/d/Work/A_Very_Long_Cat"], function( id, done ) {
-					async.eachSeries(ids, function (id, done) {
+					async.eachSeries(ids, function (id, doneEach ) {
 
-							db.collection(config.collection)
-								.find({"@id": id}, {"links": false, "linksAndPath": false})
-								.toArray(function (error, objects) {
-									var links = findLinks(objects[0]);
-									//console.log( util.inspect(links, {showHidden:false, colors:true, depth:null}) );
+						db.collection(config.collection)
+							.find({"@id": id}, {"links": false, "linksAndPath": false})
+							.toArray(function (error, objects) {
+								if( error ) {
+									console.error( error );
+								}
 
-									links = findLinksExtended(objects[0]);
-									//console.log( util.inspect(links, {showHidden:false, colors:true, depth:null}) );
+								var links = findLinks(objects[0]);
+								//console.log( util.inspect(links, {showHidden:false, colors:true, depth:null}) );
 
-									var flatLinks = [];
-									flattenLinks(links, flatLinks);
-									//console.log( "FlatLinks:", util.inspect(flatLinks, {showHidden:false, colors:true, depth:null}) );
+								links = findLinksExtended(objects[0]);
+								//console.log( util.inspect(links, {showHidden:false, colors:true, depth:null}) );
 
-									flatLinks = flatLinks.filter(function (linker) {
-										var link = linker.link;
-										var splits = link.split("/");
-										return link.indexOf("http://annalist") != -1
-											&& splits.length == 9
-											&& link != 'http://annalist.net/EntityData'
-											&& link != id;
-									});
+								var flatLinks = [];
+								flattenLinks(links, flatLinks);
+								//console.log( "FlatLinks:", util.inspect(flatLinks, {showHidden:false, colors:true, depth:null}) );
 
-									//console.log(id);
-									//console.log(links);
-									if (!(id in allLinks)) {
-										allLinks[id] = flatLinks;
+								flatLinks = flatLinks.filter(function (linker) {
+									var link = linker.link;
+									var splits = link.split("/");
+									return link.indexOf("http://annalist") != -1
+										&& splits.length == 9
+										&& link != 'http://annalist.net/EntityData'
+										&& link != id;
+								});
+
+								//console.log(id);
+								//console.log(links);
+								if (!(id in allLinks)) {
+									allLinks[id] = flatLinks;
+								}
+								else {
+									allLinks[id] = allLinks[id].concat(flatLinks)
+								}
+
+
+								for (var i = 0, z = flatLinks.length; i < z; i++) {
+									if (!(flatLinks[i].link in allLinks)) {
+										allLinks[flatLinks[i].link] = [{
+											path: flatLinks[i].path,
+											link: id,
+											reverse: true  // the path shows how to get from b to a
+										}]; // linkback
 									}
 									else {
-										allLinks[id] = allLinks[id].concat(flatLinks)
-									}
+										var reverseLinks = allLinks[flatLinks[i].link];
+										var found = false;
+										for (var j = 0, y = reverseLinks.length; j < y; j++) {
+											if (reverseLinks[j].link == flatLinks[i].link) {
+												found = true;
+												break;
+											}
+										}
 
-
-									for (var i = 0, z = flatLinks.length; i < z; i++) {
-										if (!(flatLinks[i].link in allLinks)) {
-											allLinks[flatLinks[i].link] = [{
+										if (!found) {
+											reverseLinks.push({
 												path: flatLinks[i].path,
 												link: id,
 												reverse: true  // the path shows how to get from b to a
-											}]; // linkback
-										}
-										else {
-											var reverseLinks = allLinks[flatLinks[i].link];
-											var found = false;
-											for (var j = 0, y = reverseLinks.length; j < y; j++) {
-												if (reverseLinks[j].link == flatLinks[i].link) {
-													found = true;
-													break;
-												}
-											}
-
-											if (!found) {
-												reverseLinks.push({
-													path: flatLinks[i].path,
-													link: id,
-													reverse: true  // the path shows how to get from b to a
-												});
-											}
+											});
 										}
 									}
+								}
 
-									done();
-								});
-						},
-						function () {
-							//console.log(util.inspect(allLinks, false, null));
+								console.log( "Done " + id );
+								doneEach();
+							});
+					},
+					function () {
+						//console.log(util.inspect(allLinks, false, null));
 
-							//outputGraphData( allLinks );
+						//outputGraphData( allLinks );
 
-							for (id in allLinks) {
-								db.collection(config.collection)
-									.findOneAndUpdate({"@id": id}, {"$set": {"linksAndPath": allLinks[id]}})
-							}
-						});
+						async.each( allLinks, function (id, doneUpdate ) {
+							db.collection(config.collection)
+									.findOneAndUpdate( {"@id": id}, {"$set": {"linksAndPath": allLinks[id]}}, function( error ) {
+										if( error ) {
+											console.error( error );
+										}
+
+										doneUpdate();
+									})
+						}, function() {
+							console.log("Database update completed");
+						} )
+					});
+
 				});
-
 			});
-
 		});
 	}
 
@@ -176,7 +189,7 @@ function findLinks( entity, base ) {
 		}
 	}
 	else if( entity.constructor === Object ) {
-		for (key in entity) {
+		for (var key in entity) {
 			links = links.concat( findLinks( entity[key], base  ) )
 		}
 	}
