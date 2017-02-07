@@ -6,7 +6,7 @@
 
 	{#get key="rdfs:comment"}
 		{#get key="@value"}
-			<p>{.}</p>
+			<p>{#maxLength length="150"/}</p>
 		{/get}
 	{/get}
 
