@@ -1,41 +1,64 @@
 {>"fentities/entity/entity"/}
 
 {<entitysContent}
-	<div class="entity" id="main" data-subject="{subject}">
-		basic.dust<h1>
-			{#predicates.items}
-				{#get key="rdfs:label"}
-					{.}
-				{:else}
-					{subject}
-				{/get}
-			{:else}
-				{subject}
-			{/predicates.items}
+	<small style="color:#999">(basic.dust)</small>
 
-		</h1>
+	<div class="row">
 
-		{#predicates.items}
-			{#get key="rdfs:comment"}
-				<p>{.}</p>
-			{/get}
-		{/predicates.items}
-		<br/><br/><br/>
-			{?predicates.list}
-				<table>
-					{#predicates.list}
-						<tr>
-							{#typeIs types="literal,uri"}
-								<td>{p.value}</td>
-								<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
-								<td>{o.value}</td>
-							{/typeIs}
-						</tr>
+		<div class="medium-8 columns">
+			<div class="entity" id="main" data-subject="{subject}">
+				<h1>
+					{#predicates.items}
+						{#get key="rdfs:label"}
+							{.}
+						{:else}
+							{subject}
+						{/get}
+					{:else}
+						{subject}
+					{/predicates.items}
+
+				</h1>
+
+				{#predicates.items}
+					{#get key="rdfs:comment"}
+						<p>{.}</p>
+					{/get}
+				{/predicates.items}
+
+				<br/><br/><br/>
+					{?predicates.list}
+						<table>
+							{#predicates.list}
+								<tr>
+									{#typeIs types="literal,uri"}
+										<td>{p.value}</td>
+										<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+										<td>{o.value}</td>
+									{/typeIs}
+								</tr>
+							{/predicates.list}
+						</table>
+					{:else}
+						<p>Empty</p>
 					{/predicates.list}
-				</table>
-			{:else}
-				<p>Empty</p>
-			{/predicates.list}
-	</div>
+			</div>
 
+			<div>
+				<div class="medium-6 columns">
+					<div class="entities-section"></div>
+				</div>
+
+				<div class="medium-6 columns">
+					<div class="entities-section"></div>
+				</div>
+			</div>
+
+		</div>{!/class=medium-8}
+
+		<div class="medium-4 columns">
+			<div class="entities-section"></div>
+		</div>
+
+	</div>
 {/entitysContent}

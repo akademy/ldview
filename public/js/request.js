@@ -1,6 +1,9 @@
 var ev = ev || {};
+if( !$ ) $={"needs jquery":1};
+
 ev.EntityControl = function() {
-	"strictmode";
+	'use strict';
+
 	const OTYPE = {
 		URI: "uri",
 		BNODE: "bnode",
@@ -35,26 +38,11 @@ ev.EntityControl = function() {
 
 			var entityPreds = splitEntitiesIntoTopLevelPredicates( entityMongo, data );
 
-			var $areas = $(".entities.general"), area = 0;
+			removeUnknownPredicatePositions( entityPreds );
 
 			for( var entityPred in entityPreds ) {
 
-				// Work out a place to put this entity based on template design.
-				// Specifi with a predicate, general for one type (any), all (for everything
-				var typePosition = '.entities[data-predicate="' + entityPred + '"]';
-				var $typeDiv = $(typePosition);
-				if( $typeDiv.length === 0 ) {
-
-					if( $areas.length > 0 && area < $areas.length ) {
-						$typeDiv = $($areas[area]);
-						$typeDiv.data( "predicate", entityPred );
-						area += 1;
-					}
-					else {
-						$("#others").append('<div class="entities" data-predicate="' + entityPred + '"></div>');
-						$typeDiv = $(typePosition);
-					}
-				}
+				var $typeDiv = getPosition( entityPred );
 
 				$typeDiv.append( '<h2>' + ev.Rephrase.rephrase(entityPred) + '</h2>' );
 
@@ -80,14 +68,14 @@ ev.EntityControl = function() {
 			}
 
 			// Remove empties
-			var $predicateAreas = $(".entities[data-predicate]");
+			/*var $predicateAreas = $(".entities[data-predicate]");
 			for( var i=0, z=$predicateAreas.length; i<z; i++ ) {
 				var $area = $($predicateAreas[i]);
 				var $h2 = $area.children("h2");
 				if( $h2.length === 0 ) {
 					$area.remove();
 				}
-			}
+			}*/
 		})
 		.fail(function() {
 			console.log( "getLinked:fail" );
@@ -96,6 +84,85 @@ ev.EntityControl = function() {
 		//	console.log( "getLinked:always" );
 		//});
 	};
+
+	function removeUnknownPredicatePositions( predicates ) {
+		var predicateKeys = Object.keys(predicates);
+		var $predPositions = $('.entities[data-predicate]');
+
+		for( var i=0, iz=$predPositions.length; i<iz; i++ ) {
+			var $position = $($predPositions[i]);
+			var pred = $position.data("predicate");
+			
+			var found = false;
+			for( var j=0, jz=predicateKeys.length; j<jz; j++ ) {
+				if( predicateKeys[j] === pred ) {
+					found = true;
+					break;
+				}
+			}
+			
+			if( !found ) {
+				$position.remove();
+			}
+		}
+
+	}
+
+	function getPosition( predicate ) {
+		// Work out a place to put this entity based on template design.
+		// 1. Specific with [data-predicate="some predicate"]
+		// 2. Section with class="entities-section"
+		//   2.a. Order by height of section on page
+		//   2.b. Number of class="entities" inside
+		// 3. At end of <body>
+		
+		// TODO: Perhaps order just by height of entities being added...
+
+		var typePosition = '.entities[data-predicate="' + predicate + '"]';
+		var $div = $(typePosition);
+
+		if( $div.length === 0 ) {
+
+			var $sections = $(".entities-section");
+			var $section = null;
+
+			if( $sections.length > 0 ) {
+				var entitiesMin = 999999;
+				var heightMin = 99999999;
+
+				for( var i=0, iz=$sections.length; i<iz; i++ ) {
+					var $sec = $($sections[i]);
+
+					var height = $sec.position().top;
+					var entitiesCount = $sec.find(".entities").length;
+
+					if( height < heightMin && entitiesCount <= entitiesMin ) {
+						$section = $sec;
+						entitiesMin = entitiesCount;
+						heightMin = height;
+					}
+					else if( entitiesCount < entitiesMin) {
+						$section = $sec;
+						entitiesMin = entitiesCount;
+						heightMin = height;
+					}
+				}
+			}
+			else {
+				$section = $("body");
+			}
+
+			$section.append('<div class="entities" data-predicate="' + predicate + '"></div>');
+			$div = $(typePosition);
+		}
+		else {
+			if ($div.length > 1) {
+				$div = $($div[0]);
+			}
+		}
+
+		return $div;
+	}
 
 	function switchMain( newMain ) {
 		var newMainSelector = "[data-subject='" + newMain + "']";
@@ -174,7 +241,7 @@ ev.EntityControl = function() {
 			id : entity["@id"]
 		};
 
-		for( attr in entity ) {
+		for( var attr in entity ) {
 			if( attr !== "@id" && attr !== "_id" && attr !== "links" && attr !== "linksAndPath" ) {
 				if( entity[attr].length === 1 && entity[attr][0]["@value"]) {
 					attributes.push({"attr": attr, "value": entity[attr][0]["@value"]});

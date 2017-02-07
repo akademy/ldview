@@ -1,57 +1,78 @@
 {>"fentities/entity/entity"/}
 
 {<entitysContent}
+	<small style="color:#999">(performance.dust)</small>
+
 	<div class="row">
 		<div class="medium-8 columns">
 			<div class="entity" id="main" data-subject="{subject}">
-				<small style="color:#999">performance.dust</small>
-				<h1>
-					{#predicates.items}
-						{#get key="rdfs:label"}
-							{.}
+
+				{?predicates.items}
+					<h1>
+						{#predicates.items}
+							{#get key="rdfs:label"}
+								{.}
+							{:else}
+								{subject}
+							{/get}
 						{:else}
 							{subject}
+						{/predicates.items}
+
+					</h1>
+
+					{#predicates.items}
+						{#get key="rdfs:comment"}
+							<p>{.}</p>
 						{/get}
-					{:else}
-						{subject}
 					{/predicates.items}
 
-				</h1>
-
-				{#predicates.items}
-					{#get key="rdfs:comment"}
-						<p>{.}</p>
-					{/get}
+				{:else}
+					<p>Empty</p>
 				{/predicates.items}
 
-				<br/><br/><br/>
-					{?predicates.list}
-						<table>
-							{#predicates.list}
-								<tr>
-									{#typeIs types="literal,uri"}
-										<td>{p.value}</td>
-										<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
-										<td>{o.value}</td>
-									{/typeIs}
-								</tr>
-							{/predicates.list}
-						</table>
-					{:else}
-						<p>Empty</p>
-					{/predicates.list}
+				{?predicates.list}
+					<br/><br/><br/>
+
+					<table>
+						{#predicates.list}
+							<tr>
+								{#typeIs types="literal,uri"}
+									<td>{p.value}</td>
+									<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+									<td>{o.value}</td>
+								{/typeIs}
+							</tr>
+						{/predicates.list}
+					</table>
+				{:else}
+					<p>Empty</p>
+				{/predicates.list}
 			</div>
+
+			<div>
+				<div class="medium-6 columns">
+					<div class="entities-section"></div>
+				</div>
+				<div class="medium-6 columns">
+					<div class="entities-section"></div>
+				</div>
+			</div>
+
 		</div>
 
 		<div class="medium-4 columns">
-			<div class="entities"
-				data-predicate="http://erlangen-crm___org/current/P7_took_place_at">
-			</div>
+			<div class="entities-section">
+				<div class="entities"
+					data-predicate="http://erlangen-crm___org/current/P7_took_place_at">
+				</div>
 
-			<div class="entities"
-				data-predicate="http://erlangen-crm___org/efrbroo/R25F_performed_r">
+				<div class="entities"
+					data-predicate="http://erlangen-crm___org/efrbroo/R25F_performed_r">
+				</div>
 			</div>
 		</div>
+
 	</div>
 
 {/entitysContent}
