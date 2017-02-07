@@ -3,8 +3,8 @@ ev.Rephrase = {
 	// TODO: Need different backward and forward rephrasing e.g. (performance) "took place at" (place) BUT (place) "was where this was done" (performance)
 	rephrases : {
 		"http://erlangen-crm___org/current/P7_took_place_at" : {
-			"forward" : "Took place at",
-			"reverse" : "Occured here"
+			"forward" : "Occured here",
+			"reverse" : "Took place at"
 		},
 		"http://erlangen-crm___org/efrbroo/R25F_performed_r" : {
 			"forward": "Performed these",
