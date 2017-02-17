@@ -10,9 +10,9 @@
 <body>
 	<header>
 		<ul class="dropdown menu" data-dropdown-menu>
-	      <li><a href="/fentities">Show all</a></li>
-	      <li><a href="/fentities/attrs/http%3A%2F%2Fannalist.net%2Fannalist_sitedata%2Fc%2FCarolan_Guitar%2Fd%2FPerson%2FAdrian_Hazzard">Show a Person</a></li>
-	      <li><a href="/fentities/attrs/http%3A%2F%2Fannalist.net%2Fannalist_sitedata%2Fc%2FCarolan_Guitar%2Fd%2FPerformance%2FCaroling_Carolan">Show a Performance</a></li>
+	      <li><a href="/">Show all</a></li>
+	      <li><a href="/attrs/http%3A%2F%2Fannalist.net%2Fannalist_sitedata%2Fc%2FCarolan_Guitar%2Fd%2FPerson%2FAdrian_Hazzard">Show a Person</a></li>
+	      <li><a href="/attrs/http%3A%2F%2Fannalist.net%2Fannalist_sitedata%2Fc%2FCarolan_Guitar%2Fd%2FPerformance%2FCaroling_Carolan">Show a Performance</a></li>
 	    </ul>
 	</header>
 

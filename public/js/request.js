@@ -16,7 +16,7 @@ ev.EntityControl = function() {
 	
 	this.getLinked = function( e ) {
 
-		var uri = "/fentities/links/" + encodeURIComponent(e.subject);  // "/data/entity/http%3A%2F%2Fannalist.net%2Fannalist_sitedata%2Fc%2FCarolan_Guitar%2Fd%2FPerson%2FMyriam_Bleau"
+		var uri = "/links/" + encodeURIComponent(e.subject);  // "/data/entity/http%3A%2F%2Fannalist.net%2Fannalist_sitedata%2Fc%2FCarolan_Guitar%2Fd%2FPerson%2FMyriam_Bleau"
 
 		var uris = getAttributesWithUris(e);
 		var bnodes = getAttributesWithBlanks(e);
@@ -211,7 +211,7 @@ ev.EntityControl = function() {
 				complete: function() {
 					setTimeout( function() {
 						console.log("clicked", newMain );
-						window.location.href = "/fentities/attrs/" + encodeURIComponent( newMain );
+						window.location.href = "/attrs/" + encodeURIComponent( newMain );
 					}, 400 );
 				}
 			}
@@ -265,7 +265,7 @@ ev.EntityControl = function() {
 		//TODO load templates based on type not the ID!
 		//
 
-		tc.addTemplate( encodeId + "_2", "/fentities/template/" + encodeId + "?level=2", function( error ) {
+		tc.addTemplate( encodeId + "_2", "/template/" + encodeId + "?level=2", function( error ) {
 			if( error ) {
 				console.log( error );
 			}

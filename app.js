@@ -6,10 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var hoffman = require('hoffman');
 
-var routes = require('./routes/index');
-var routesEntities = require('./routes/entities');
-var routesFentities = require('./routes/fentities');
-var routesData = require('./routes/ajax-entities');
+var routes = require('./routes/fentities');
 
 var app = express();
 
@@ -29,9 +26,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.set('view cache', false);
 
 app.use('/', routes);
-app.use('/entities/', routesEntities);
-app.use('/fentities/', routesFentities);
-app.use('/data/', routesData );
 
 if (app.get('env') === 'production') {
 	// optionally load all templates into dust cache on server start
