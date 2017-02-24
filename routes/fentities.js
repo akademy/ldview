@@ -317,11 +317,21 @@ router.post('/links/:uri', function(req, res ) {
 
 router.get('/template/:uri', function(req, res ) {
 	// TODO work out which template we need. (Or construct the template)
-	fs.readFile('views/fentities/entity/parts/_general.dust', 'utf8', function (err,data) {
+	var views_location = "views/fentities/entity/parts/";
+	var file = req.query["type"].toLocaleLowerCase() + ".dust";
+	
+	fs.readFile(views_location + file, 'utf8', function (err,data) {
 		if (err) {
-			return console.log(err);
+			fs.readFile(views_location + '_general.dust', 'utf8', function (err,data) {
+				if (err) {
+					return console.log(err);
+				}
+				res.send(data);
+			});
 		}
-		res.send(data);
+		else {
+			res.send(data);
+		}
 	});
 });
 

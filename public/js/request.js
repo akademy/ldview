@@ -219,7 +219,6 @@ ev.EntityControl = function() {
 
 		$("html, body").animate({ scrollTop: 0 }, { duration: moveDuration });
 
-
 	}
 
 	/*function getPsFromAttributes( attributes ) {
@@ -242,17 +241,19 @@ ev.EntityControl = function() {
 		};
 
 		for( var attr in entity ) {
-			if( attr !== "@id" && attr !== "_id" && attr !== "links" && attr !== "linksAndPath" ) {
-				if( entity[attr].length === 1 && entity[attr][0]["@value"]) {
-					attributes.push({"attr": attr, "value": entity[attr][0]["@value"]});
-					context[attr] =  entity[attr][0]["@value"];
+			if( entity.hasOwnProperty( attr ) ) {
+				if (attr !== "@id" && attr !== "_id" && attr !== "links" && attr !== "linksAndPath") {
+					if (entity[attr].length === 1 && entity[attr][0]["@value"]) {
+						attributes.push({"attr": attr, "value": entity[attr][0]["@value"]});
+						context[attr] = entity[attr][0]["@value"];
+					}
+					else {
+						attributes.push({"attr": attr, "value": entity[attr]});
+						context[attr] = entity[attr];
+					}
 				}
-				else {
-					attributes.push({"attr": attr, "value": entity[attr]});
-					context[attr] =  entity[attr];
-				}
+				context[attr] = entity[attr]; //[0]["@value"];
 			}
-			context[attr] = entity[attr]//[0]["@value"];
 		}
 
 		context["attributes"] = attributes;
@@ -265,7 +266,7 @@ ev.EntityControl = function() {
 		//TODO load templates based on type not the ID!
 		//
 
-		tc.addTemplate( encodeId + "_2", "/template/" + encodeId + "?level=2", function( error ) {
+		tc.addTemplate( encodeId + "_2", "/template/" + encodeId + "?level=2&type=" + getEntityType(entity), function( error ) {
 			if( error ) {
 				console.log( error );
 			}
@@ -279,6 +280,13 @@ ev.EntityControl = function() {
 		tc.render( encodeId + "_2", context, function( error, result ) {
 			callback( error, result, entityAndPath.linkAndPath );
 		});
+	}
+
+	function getEntityType( entity ) {
+		if( entity ) {
+			return entity["http://annalist___net/type_id"][0]["@value"];
+		}
+		return "";
 	}
 
 	function getAttributesWithUris( entity ) {
