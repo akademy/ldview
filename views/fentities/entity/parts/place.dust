@@ -1,0 +1,25 @@
+<div class="entity" title="{#getValue key="@id"/}" data-subject="{#getValue key="@id"/}">
+	<h3>{#get key="rdfs:label"}
+			{#getValue key="@value"/}
+		{/get}
+	</h3>
+
+	<img src="http://www.guoguiyan.com/data/out/150/70307797-place-wallpapers.jpg"/>
+
+    <small style="color:#999;">(
+        {#get key="http://annalist___net/type_id"}{#get key="@value"}{.}, {/get}{/get}
+		{#get key="@id"}{.}{/get}
+	)</small>
+
+	<p style="display:none">{#get key="@type"}
+		{.}<br/>
+	{/get}</p>
+
+	{?attributes}
+		<ul style="display:none">
+		{#attributes}
+		   <li>{attr} : {value}</li>
+		{/attributes}
+	  </ul>
+	{/attributes}
+</div>
