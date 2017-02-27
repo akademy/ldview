@@ -25,7 +25,9 @@ function( config ) {
 			" .iframe-wrap {width:" + _size.w + "px;height:" + _size.h + "px;padding:0;margin:0;display:inline-block;margin:5px;}" +
 			" .iframe-wrap.full {position:absolute;top:20px;left:20px;}" +
 			" .iframe-wrap a {width:" + _size.w + "px;height:" + _size.h + "px;padding:0;margin:0;display:block;position:absolute;background-color:transparent;text-align:center;font-size:20px;font-weight:bold;}" +
-			" .iframe-wrap a:hover {background-color: rgba(0,0,0,0.5);color:white;}" + 
+			" .iframe-wrap a:hover {background-color: rgba(0,0,0,0.5);color:white;}" +
+			" .iframe-wrap button {visibility:hidden;position:relative;left:" + _scaledSize.w + "px;}" +
+			" .iframe-wrap.full button {visibility:visible;}" +
 			" .iframe-wrap.full a:hover, .iframe-wrap.full a:hover.hide {background-color: rgba(0,0,0,0);color:transparent;}" + 
 			" .iframe-wrap iframe {width:" + _scaledSize.w + "px;height:" + _scaledSize.h + "px;transform: scale(" + _scale + ");position:absolute;transform-origin: 0 0;overflow: hidden;}" +
 			" .iframe-wrap.full iframe {width:1010px;height:685px;transform: scale(1);z-index:100;overflow: auto;}" +
@@ -39,11 +41,13 @@ function( config ) {
 	
 		for( var i=0; i<_addresses.length; i++  ) {
 
-			var div = document.createElement("div"),
-				iframe = document.createElement("iframe"),
-				a = document.createElement("a"),
-				aText =  document.createTextNode( _addresses[i].text ),
-				br = document.createElement("br");
+			var div         = document.createElement("div"),
+				iframe      = document.createElement("iframe"),
+				a           = document.createElement("a"),
+				aText       = document.createTextNode( _addresses[i].text ),
+				br          = document.createElement("br"),
+				button      = document.createElement("button"),
+				buttonText  = document.createTextNode( "Close" );
 
 			div.setAttribute( "class","iframe-wrap loading" );
 			div.setAttribute( "id","iframe-wrap-" + i );
@@ -61,10 +65,15 @@ function( config ) {
 			a.setAttribute("alt",_addresses[i].text + " : " + _addresses[i].website);
 			a.onclick = aOnClick.bind(a,iframe);
 
+			button.onclick = buttonOnClick.bind( button, iframe );
+			button.setAttribute("value","Close");
+
 			a.appendChild(br);
 			a.appendChild(aText);
 			div.appendChild(iframe);
 			div.appendChild(a);
+			button.appendChild(buttonText);
+			div.appendChild(button);
 			_element.appendChild(div);
 
 			_windows.push( div );
@@ -107,6 +116,12 @@ function( config ) {
 				_windows[i].classList.remove("full");
 			}
 			iframe.parentNode.classList.add("full");
+		}
+
+		function buttonOnClick ( iframe ) {
+			for( var i=0;i<_windows.length;i++) {
+				_windows[i].classList.remove("full");
+			}
 		}
 
 	}, false);
