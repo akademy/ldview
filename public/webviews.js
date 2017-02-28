@@ -17,14 +17,15 @@ function( config ) {
 				{website:"http://wouldlike.gift",text : "2 OK"},
 				{website:"http://blog.akademy.co.uk",text : "3 OK"},
 				{website:"httpf://error.example.com",text : "4 Error Bad schema"},
-				{website:"http://sefsfsdfsdfsdfdsffdsffsddffsdf.com",text : "5 Error Bad URL"},
-				{website:"http://error.exampgdfgdfgfdgggdfle.com",text : "6 Unknown website"},
+				{website:"http://!$&'()*+,;=.com",text : "5 Error Bad URL"},
+				{website:"http://qweetergfsadgdvvbboisfgergerhjokjnmtn.com",text : "6 Unknown website"},
 				{website:"http:/local",text : "7 OK"},
 				{website:"http://127.0.0.1",text : "8 OK"}
 
 		],
 		_windows = [];
-		
+
+	window.addEventListener("message", function( event ) { console.log("A window message:", event ); }, false);
 	window.addEventListener("load", function() {
 
 		var style = document.createElement("style");
@@ -72,6 +73,8 @@ function( config ) {
 			iframe.onload = iFrameOnLoad.bind( iframe, div );
 			iframe.onerror = iFrameOnError.bind( iframe, div );
 
+			//iframe.addEventListener("message", function( event ) { console.log("A frame message:", event ); }, false);
+
 			a.setAttribute("src",_addresses[i].website);
 			a.setAttribute("alt",_addresses[i].text + " : " + _addresses[i].website);
 			a.onclick = aOnClick.bind(a,iframe);
@@ -112,15 +115,8 @@ function( config ) {
 					content = content.document;
 				}
 
-				if (content.body && content.implementation ) {
-					var bodyChildCount = content.body.childElementCount ;
-					console.log("3", bodyChildCount);
-					if( bodyChildCount === 0 ) { //&& divError && divError.getElementById( "errorLongContent") ) {
-						this.parentNode.classList.add("errored");
-					}
-					else {
-						this.parentNode.classList.add("loaded");
-					}
+				if (content.implementation && content.body && content.body.childElementCount > 0 ) {
+					this.parentNode.classList.add("loaded");
 				}
 				else {
 					this.parentNode.classList.add("errored");
