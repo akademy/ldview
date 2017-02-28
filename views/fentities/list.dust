@@ -2,22 +2,25 @@
 
 {<baseContent}
 	{?entities}
-		<h1>Types and Entities</h1>
+		<h1>Types</h1>
 			<ul>
 				{#entities}
 					<li><a href="#{type}">{type}</a>
 				{/entities}
 			</ul>
 
+		<h1>Entities</h1>
 		{#entities}
 			<h2 id="{type}">{type}</h2>
+
 			<ul class="entities">
 				{#entities}
-					<li class="entity">
+					<li>
+						<a href="/attrs/{id|uc}" class="entity">
 							{>"fentities/list-item"/}
-						<a href="/attrs/{id|uc}">Linked</a>
-						{~s}|{~s}<a href="/{id|uc}">Simple</a>
-						{~s}|{~s}<a href="/raw/{id|uc}">Raw</a>
+						</a>
+						[<a href="/{id|uc}">Simple</a>{~s}|{~s}
+						<a href="/raw/{id|uc}">Raw</a>]
 					</li>
 				{/entities}
 			</ul>

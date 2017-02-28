@@ -17,19 +17,27 @@ p,li,dt,dd {
 }
 
 ul.entities li {
-    width: 180px;
-    height: 180px;
     display: inline-block;
     margin: 15px;
-    border: 1px solid black;
     padding: 10px;
-    border-radius: 15px;
     overflow: auto;
 }
+ul.entities li a.entity {
+	color: black;
+	display: block;
+	color: black;
+	width: 180px;
+	height: 180px;
+	border: 1px solid black;
+	border-radius: 15px;
+}
+ul.entities li a.entity:hover {
+	color: white;
+}
 
-
-ul.entities li h3 {
-    font-size:1em;
+ul.entities li a h3 {
+	font-size:1.1em;
+	font-weight: bold;
 }
 
 #main.entity {
