@@ -18,10 +18,11 @@ Includes a webviews module to open multiple pages in a single page.
 
 ## Build ##
 
-git clone
-npm install
-create config-local.js
-(create folder temp/json/original and temp/json/adjusted)
-node bin/jsonld.jena.loader.js (it may throw some unneeded 404s)
-node bin/jsonld.mongo.loader.js
-node bin/www
+* git clone
+* npm install
+* create config-local.js
+* (create folder temp/json/original and temp/json/adjusted)
+* node bin/jsonld.jena.loader.js (it may throw some unneeded 404s)
+* node bin/jsonld.mongo.loader.js
+* node bin/www 
+* (If you use apache2 you will likely need AllowEncodedSlashes NoDecode adding)
