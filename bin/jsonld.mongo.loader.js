@@ -9,7 +9,7 @@ const async = require('async');
 const util = require("util");
 
 const MongoClient = mongo.MongoClient;
-const jsonFolder = '../temp/json/adjusted';
+const jsonFolder = 'temp/json/adjusted';
 
 MongoClient.connect( config.local.databaseUrl, function(error, db) {
 	if( error ) {
