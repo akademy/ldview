@@ -11,3 +11,5 @@ It indexes JSON data (currently only outputs from Annalist, see http://doi.org/1
 Includes a browser based template request system utilising the Dust template engine, see  LDView / public / js / templater.js
 
 Includes a node library to interface with Fuseki, see LDView / lib / fuseki.js
+
+Includes a webviews module to open multiple pages in a single page.
