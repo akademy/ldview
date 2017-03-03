@@ -1,5 +1,7 @@
 # Linked Data Views #
 
+## Description ##
+
 This is a work in progress and includes research into creating connected web views of Linked Data. It's part of the Fusing Audio and Semantic Technologies (FAST) project, see http://www.semanticaudio.ac.uk/ .
 
 The project uses NodeJS and the Dust templating engine, it interfaces with Fuseki and Mongo databases. 
@@ -13,3 +15,13 @@ Includes a browser based template request system utilising the Dust template eng
 Includes a node library to interface with Fuseki, see LDView / lib / fuseki.js
 
 Includes a webviews module to open multiple pages in a single page.
+
+## Build ##
+
+git clone
+npm install
+create config-local.js
+(create folder temp/json/original and temp/json/adjusted)
+node bin/jsonld.jena.loader.js (it may throw some unneeded 404s)
+node bin/jsonld.mongo.loader.js
+node bin/www
