@@ -229,40 +229,44 @@ router.get('/attrs/:uri', function(req, res ) {
 
 	var client = new sparql.Client("http://localhost:3030/test1/sparql");
 	client.query( query, function(err, result) {
-
-		var bindings = result.results.bindings;
-		var annalistType = null; // TODO: use none annalist type.
-
-		var predicates = {
-			items : {},
-			list : []
-		};
-		
-		for( var i=0, z=bindings.length;i<z; i++) {
-			predicates.items[bindings[i].p.value] = bindings[i].o.value;
-			predicates.list.push(bindings[i]);
-			
-			if( bindings[i].p.value === "http://annalist.net/type_id" ) {
-				annalistType = bindings[i].o.value;
-			}
-		}
-		
-		// todo: choose view based on entity type
+		var context = {};
 		var render = 'fentities/entity/basic';
-		if( annalistType === 'Person') {
-			render = 'fentities/entity/person';
-		}
-		else if( annalistType === "Performance") {
-			render = 'fentities/entity/performance';
-		}
 
-		var context = {
-			predicates : predicates,
-			subject : req.params.uri,
-			results : bindings
-		};
+		if( !err && result.results.bindings.length > 0 ) {
 
-		evDustHelpers.addHelpers( context );
+			var bindings = result.results.bindings;
+			var annalistType = null; // TODO: use none annalist type.
+
+			var predicates = {
+				items: {},
+				list: []
+			};
+
+			for (var i = 0, z = bindings.length; i < z; i++) {
+				predicates.items[bindings[i].p.value] = bindings[i].o.value;
+				predicates.list.push(bindings[i]);
+
+				if (bindings[i].p.value === "http://annalist.net/type_id") {
+					annalistType = bindings[i].o.value;
+				}
+			}
+
+			// todo: choose view based on entity type
+			if (annalistType === 'Person') {
+				render = 'fentities/entity/person';
+			}
+			else if (annalistType === "Performance") {
+				render = 'fentities/entity/performance';
+			}
+
+			context = {
+				predicates: predicates,
+				subject: req.params.uri,
+				results: bindings
+			};
+
+			evDustHelpers.addHelpers(context);
+		}
 
 		res.render( render, context );
 	});
