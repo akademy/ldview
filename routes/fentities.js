@@ -298,19 +298,25 @@ router.post('/links/:uri', function(req, res ) {
 			if (err) {
 				throw err;
 			}
-			var links = result[0].linksAndPath;
+			
+			if( result[0] ) {
+				var links = result[0].linksAndPath;
 
-			var q = { $or : [{ "@id" : req.params.uri }] }; // Add *this* entity, TODO: Remove it, we should already have this but the system is in a "two database" weird configuration (i.e. it needs unmessing up...)
-			for( var i=0; i< links.length; i ++ ) {
-				q["$or"].push( { "@id" : links[i].link } )
-			}
-
-			db.collection(config.collection).find(q).toArray(function(err, result) {
-				if (err) {
-					throw err;
+				var q = {$or: [{"@id": req.params.uri}]}; // Add *this* entity, TODO: Remove it, we should already have this but the system is in a "two database" weird configuration (i.e. it needs unmessing up...)
+				for (var i = 0; i < links.length; i++) {
+					q["$or"].push({"@id": links[i].link})
 				}
-				res.send(result);
-			});
+
+				db.collection(config.collection).find(q).toArray(function (err, result) {
+					if (err) {
+						throw err;
+					}
+					res.send(result);
+				});
+			}
+			else {
+				res.send(null);
+			}
 		});
 	});
 });
