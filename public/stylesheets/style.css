@@ -30,6 +30,7 @@ ul.entities li a.entity {
 	height: 180px;
 	border: 1px solid black;
 	border-radius: 15px;
+	padding: 5px 10px;
 }
 ul.entities li a.entity:hover {
 	color: white;
@@ -38,6 +39,7 @@ ul.entities li a.entity:hover {
 ul.entities li a h3 {
 	font-size:1.1em;
 	font-weight: bold;
+	text-align: center;
 }
 
 #main.entity {
