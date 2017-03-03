@@ -16,7 +16,6 @@ var annalistDataUrlBase = 'http://annalist.net/annalist_sitedata/c/Carolan_Guita
 var annalistDataContextUrl = annalistDataUrlBase + "coll_context.jsonld";
 var annalistJsonLdFileName = "entity_data.jsonld";
 
-var fusekiDataset = "test1";
 var saveFiles = config.local.debugSaveJsonFiles || false;
 var saveFilesBase = "temp/json/";
 
@@ -92,7 +91,7 @@ request( annalistDataUrlBase, function(error, response, body ) {
 
 function fusekiIndex( jsonLdUrls, callbackComplete ) {
 
-	fuseki.createDataset( fusekiDataset, "mem", function() {
+	fuseki.createDataset( config.local.fuseki.dataset, "mem", function() {
 	
 		fuseki.clearDataset( function () {
 	
