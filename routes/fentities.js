@@ -13,12 +13,17 @@ var helpersDust = require('../lib/helpersDust.js');
 var evDustHelpers = require('../public/js/dustHelpers.js');
 var helpersEntity = require('../lib/helpersEntity.js');
 
+var sparqlClient = "http://" + config.local.fuseki.host
+								+ ":" + config.local.fuseki.port
+								+ "/" + config.local.fuseki.dataset
+								+ "/sparql";
+
 var router = express.Router();
 
 /* list all the entities we have */
 router.get('/', function(req, res /*, next */) {
 
-	var client = new sparql.Client("http://localhost:3030/test1/sparql");
+	var client = new sparql.Client(sparqlClient);
 	var q ="" +
 		"PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> " +
 	"select distinct ?s ?label ?comment where { " +
@@ -78,7 +83,7 @@ router.get('/', function(req, res /*, next */) {
 
 router.get('/raw/:uri', function(req, res /*, next */) {
 
-	var client = new sparql.Client("http://localhost:3030/test1/sparql");
+	var client = new sparql.Client(sparqlClient);
 	client.query( util.format( "" +
 			"select * where { " +
 			"	<%s> ?p ?o  " +
@@ -97,7 +102,7 @@ router.get('/raw/:uri', function(req, res /*, next */) {
 
 router.get('/:uri', function(req, res /*, next */) {
 
-	var client = new sparql.Client("http://localhost:3030/test1/sparql");
+	var client = new sparql.Client(sparqlClient);
 	client.query(
 		//util.format( `select * where { <%s> ?p ?o }`, req.params.uri ),
 		// Direct and indirect via (one level) blank
@@ -227,7 +232,7 @@ router.get('/attrs/:uri', function(req, res ) {
 				"filter( ?s = <%s> )" +
 		"}", req.params.uri );
 
-	var client = new sparql.Client("http://localhost:3030/test1/sparql");
+	var client = new sparql.Client(sparqlClient);
 	client.query( query, function(err, result) {
 		var context = {};
 		var render = 'fentities/entity/basic';
@@ -288,7 +293,7 @@ router.post('/links/:uri', function(req, res ) {
 		, req.params.uri );
 
 
-	var client = new sparql.Client("http://localhost:3030/test1/sparql");
+	var client = new sparql.Client(sparqlClient);
 	client.query( query, function(err, result) {
 
 		var results = result.results.bindings;
