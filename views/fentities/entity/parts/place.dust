@@ -4,8 +4,6 @@
 		{/get}
 	</h3>
 
-	<img src="http://www.guoguiyan.com/data/out/150/70307797-place-wallpapers.jpg"/>
-
     <small style="color:#999;">(
         {#get key="http://annalist___net/type_id"}{#get key="@value"}{.}, {/get}{/get}
 		{#get key="@id"}{.}{/get}
