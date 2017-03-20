@@ -24,17 +24,29 @@
 	{/attributes}
 
 	<script>
-
-	</script>
-
-	<script>
 	   /* 53.333 -> 51.333 */
 	   /* -2.300 -> -0.060 */
-		var mymap = L.map('mapid').setView([52.949, -1.136], 13);
+		var map = L.map('mapid', {
+		    attributionContorl:false,
+		    zoomControl:false
+		    }
+		).setView([52.949, -1.136], 13);
+
 		L.tileLayer('http://{~lb}s{~rb}.tile.osm.org/{~lb}z{~rb}/{~lb}x{~rb}/{~lb}y{~rb}.png', {
-		    attribution:  '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+		    /*attribution:  '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',*/
 		    maxZoom: 18,
-		}).addTo(mymap);
+		}).addTo(map);
+
+		map.dragging.disable();
+		map.touchZoom.disable();
+		map.doubleClickZoom.disable();
+		map.scrollWheelZoom.disable();
+		map.boxZoom.disable();
+		map.keyboard.disable();
+		if (map.tap){
+			map.tap.disable();
+		}
+		document.getElementById('map').style.cursor='default';
 	</script>
 
 </div>

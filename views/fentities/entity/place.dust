@@ -1,0 +1,81 @@
+{>"fentities/entity/entity"/}
+
+{<entitysContent}
+	<small style="color:#999">(place.dust)</small>
+
+	<div class="row">
+		<div class="medium-8 columns">
+			<div class="entity" id="main" data-subject="{subject}">
+
+				{?predicates.items}
+					<h1>
+						{#predicates.items}
+								{#get key="rdfs:label"}
+									{.}
+								{:else}
+									{subject}
+								{/get}
+						{/predicates.items}
+					</h1>
+
+	            <div id="mapid" style="height:300px"></div>
+
+					<script>
+					   /* 53.333 -> 51.333 */
+					   /* -2.300 -> -0.060 */
+						var map = L.map('mapid').setView([52.949, -1.136], 13);
+						L.tileLayer('http://{~lb}s{~rb}.tile.osm.org/{~lb}z{~rb}/{~lb}x{~rb}/{~lb}y{~rb}.png', {
+						    attribution:  '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors, LDView',
+						    maxZoom: 18,
+						}).addTo(map);
+
+
+					</script>
+
+					{#predicates.items}
+						{#get key="rdfs:comment"}
+							<p>{.}</p>
+						{/get}
+					{/predicates.items}
+
+				{:else}
+					<p>No items</p>
+				{/predicates.items}
+
+				{?predicates.list}
+					<br/><br/><br/>
+
+					<table>
+						{#predicates.list}
+							<tr>
+								{#typeIs types="literal,uri"}
+									<td>{p.value}</td>
+									<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+									<td>{o.value}</td>
+								{/typeIs}
+							</tr>
+						{/predicates.list}
+					</table>
+				{:else}
+					<p>No list</p>
+				{/predicates.list}
+			</div>
+
+			<div>
+				<div class="medium-6 columns">
+					<div class="entities-section"></div>
+				</div>
+
+				<div class="medium-6 columns">
+					<div class="entities-section"></div>
+				</div>
+			</div>
+
+		</div>
+
+		<div class="medium-4 columns">
+			<div class="entities-section"></div>
+		</div>
+	</div>
+
+{/entitysContent}
