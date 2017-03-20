@@ -4,6 +4,8 @@
 		{/get}
 	</h3>
 
+	 <div id="mapid" style="height:200px;"></div>
+
     <small style="color:#999;">(
         {#get key="http://annalist___net/type_id"}{#get key="@value"}{.}, {/get}{/get}
 		{#get key="@id"}{.}{/get}
@@ -20,4 +22,19 @@
 		{/attributes}
 	  </ul>
 	{/attributes}
+
+	<script>
+
+	</script>
+
+	<script>
+	   /* 53.333 -> 51.333 */
+	   /* -2.300 -> -0.060 */
+		var mymap = L.map('mapid').setView([52.949, -1.136], 13);
+		L.tileLayer('http://{~lb}s{~rb}.tile.osm.org/{~lb}z{~rb}/{~lb}x{~rb}/{~lb}y{~rb}.png', {
+		    attribution:  '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+		    maxZoom: 18,
+		}).addTo(mymap);
+	</script>
+
 </div>
