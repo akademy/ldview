@@ -17,8 +17,23 @@ var annalistDataContextUrl = annalistDataUrlBase + "coll_context.jsonld";
 var annalistJsonLdFileName = "entity_data.jsonld";
 
 var saveFiles = config.local.debugSaveJsonFiles || false;
-var saveFilesBase = "temp/json/";
 
+var saveFilesBase = "temp/json/";
+var saveFilesOriginal = saveFilesBase + "original";
+var saveFilesAdjusted = saveFilesBase + "adjusted";
+
+if( !fs.existsSync("temp") ) {
+	fs.mkdirSync("temp");
+}
+if( !fs.existsSync(saveFilesBase) ) {
+	fs.mkdirSync(saveFilesBase);
+}
+if( !fs.existsSync(saveFilesOriginal) ) {
+	fs.mkdirSync( saveFilesOriginal );
+}
+if( !fs.existsSync(saveFilesAdjusted) ) {
+	fs.mkdirSync( saveFilesAdjusted );
+}
 
 //fuseki_lib.debug = true;
 
@@ -112,7 +127,7 @@ function fusekiIndex( jsonLdUrls, callbackComplete ) {
 					jsonLdContext["@context"]["annal"] = "http://annalist.net/";
 					
 					if( saveFiles ) {
-						fs.writeFileSync(saveFilesBase + "adjusted/" + getFilenameFromURL(annalistDataContextUrl), JSON.stringify(jsonLdContext, null, 2) );
+						fs.writeFileSync( saveFilesAdjusted + "/" + getFilenameFromURL(annalistDataContextUrl), JSON.stringify(jsonLdContext, null, 2) );
 					}
 	
 					async.eachSeries(jsonLdUrls, function (jsonLdUrl, complete) {
@@ -168,7 +183,7 @@ function getJsonLd( jsonldContext, jsonLdUrl, dataId, callbackComplete ) {
 			var dataJson = JSON.parse(response.body);
 
 			if( saveFiles ) {
-				fs.writeFileSync(saveFilesBase + "original/" + getFilenameFromURL(dataId) + "." + getFilenameFromURL(jsonLdUrl), JSON.stringify(dataJson, null, 2) );
+				fs.writeFileSync( saveFilesOriginal + "/" + getFilenameFromURL(dataId) + "." + getFilenameFromURL(jsonLdUrl), JSON.stringify(dataJson, null, 2) );
 			}
 
 			dataJson["@context"] = jsonldContext["@context"];
