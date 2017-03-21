@@ -1,10 +1,13 @@
 var ev = ev || {};
 ev.DustHelpers = {
-	addHelpers: function( context ) {
+	addHelpers: function( context, debug ) {
 		for (var func in ev.DustHelpers) {
 			if ( func !== "addHelpers" && ev.DustHelpers.hasOwnProperty(func) ) {
 				context[func] = ev.DustHelpers[func];
 			}
+		}
+		if( debug ) {
+			context["debug"] = true;
 		}
 	},
 	exists :  function(chunk, context, bodies, params) { // TODO: Is this needed? doesn't {#get} do this?!

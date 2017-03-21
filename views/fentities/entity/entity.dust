@@ -6,9 +6,11 @@
 		{!entities go here! The main and specific secondaries!}
 	{/entitysContent}
 
-	<small style="color:#999">{#predicates.items}
-		({#get key="http://annalist.net/type_id"}{.}{/get})
-	{/predicates.items}</small>
+	{?debug}
+		<small style="color:#999">{#predicates.items}
+			({#get key="http://annalist.net/type_id"}{.}{/get})
+		{/predicates.items}</small>
+	{/debug}
 
 	<div id="others">{!for everything else not specified!}</div>
 

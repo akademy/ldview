@@ -10,17 +10,17 @@
 		{/get}
 	{/get}
 
-    <small style="color:#999;">(
-        {#get key="http://annalist___net/type_id"}{#get key="@value"}{.}, {/get}{/get}
-		{#get key="@id"}{.}{/get}
-	)</small>
 
-	<p style="display:none">{#get key="@type"}
-		{.}<br/>
-	{/get}</p>
+	<p class="debug" style="display:none">
+	   <small style="color:#999;">(
+         {#get key="http://annalist___net/type_id"}{#get key="@value"}{.}, {/get}{/get}
+			{#get key="@id"}{.}{/get}
+		)</small>
+		{#get key="@type"}{.}<br/>{/get}
+	</p>
 
 	{?attributes}
-		<ul style="display:none">
+		<ul class="debug" style="display:none">
 		{#attributes}
 		   <li>{attr} : {value}</li>
 		{/attributes}

@@ -1,27 +1,8 @@
 <div class="entity" title="{#getValue key="@id"/}" data-subject="{#getValue key="@id"/}">
-	<h3>{#get key="rdfs:label"}
-			{#getValue key="@value"/}
-		{/get}
-	</h3>
 
-	 <div id="mapid" style="height:200px;"></div>
+	<h3>{#get key="rdfs:label"}{#getValue key="@value"/}{/get}</h3>
 
-    <small style="color:#999;">(
-        {#get key="http://annalist___net/type_id"}{#get key="@value"}{.}, {/get}{/get}
-		{#get key="@id"}{.}{/get}
-	)</small>
-
-	<p style="display:none">{#get key="@type"}
-		{.}<br/>
-	{/get}</p>
-
-	{?attributes}
-		<ul style="display:none">
-		{#attributes}
-		   <li>{attr} : {value}</li>
-		{/attributes}
-	  </ul>
-	{/attributes}
+	<div id="mapid" style="height:200px;"></div>
 
 	<script>
 	   /* 53.333 -> 51.333 */
@@ -48,5 +29,25 @@
 		}
 		document.getElementById('map').style.cursor='default';
 	</script>
+
+
+
+	<p style="display:none">
+		<small style="color:#999;">(
+         {#get key="http://annalist___net/type_id"}{#get key="@value"}{.}, {/get}{/get}
+			{#get key="@id"}{.}{/get}
+		)</small>
+		{#get key="@type"}{.}<br/>{/get}
+	</p>
+
+	{?attributes}
+		<ul style="display:none">
+		{#attributes}
+		   <li>{attr} : {value}</li>
+		{/attributes}
+	  </ul>
+	{/attributes}
+
+
 
 </div>
