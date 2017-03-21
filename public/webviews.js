@@ -42,10 +42,10 @@ akademy.webviews = akademy.webviews ||
 				" .iframe-wrap a:hover {background-color: rgba(0,0,0,0.5);color:white;}" +
 				" .iframe-wrap a.hide {color: transparent }" +
 				" .iframe-wrap a:hover.hide {color: white }" +
-				" .iframe-wrap button {visibility:hidden;position:relative;left:" + _scaledSize.w + "px;}" +
+				" .iframe-wrap button {visibility:hidden;position:relative;left:" + _scaledSize.w + "px;z-index:200}" +
 				" .iframe-wrap.full button {visibility:visible;}" +
 				" .iframe-wrap.full a:hover, .iframe-wrap.full a:hover.hide {background-color: rgba(0,0,0,0);color:transparent;}" +
-				" .iframe-wrap iframe {width:" + _scaledSize.w + "px;height:" + _scaledSize.h + "px;transform: scale(" + _scale + ");position:absolute;transform-origin: 0 0;overflow: hidden;}" +
+				" .iframe-wrap iframe {width:" + _scaledSize.w + "px;height:" + _scaledSize.h + "px;transform: scale(" + _scale + ");position:absolute;transform-origin: 0 0;overflow: hidden;background-color:white}" +
 				" .iframe-wrap.full iframe {width:1010px;height:685px;transform: scale(1);z-index:100;overflow: auto;}" +
 				" .iframe-wrap.loading iframe { display:none }" +
 				" .iframe-wrap.loaded iframe { display:block }"
