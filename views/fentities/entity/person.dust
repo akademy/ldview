@@ -1,7 +1,8 @@
 {>"fentities/entity/entity"/}
 
 {<entitysContent}
-	<small style="color:#999">(person.dust)</small>
+
+	{?debug}<small style="color:#999">(person.dust)</small>{/debug}
 
 	<div class="row">
 		<div class="medium-8 columns">
@@ -32,26 +33,26 @@
 					<p>No items</p>
 				{/predicates.items}
 
-				{?predicates.list}
-					<br/><br/><br/>
+				{?debug}
+					{?predicates.list}
+						<br/><br/><br/>
 
-					<table>
-						{#predicates.list}
-							<tr>
-								{#typeIs types="literal,uri"}
-									<td>{p.value}</td>
-									<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
-									<td>{o.value}</td>
-								{/typeIs}
-							</tr>
-						{/predicates.list}
-					</table>
-				{:else}
-					<p>No list</p>
-				{/predicates.list}
+						<table>
+							{#predicates.list}
+								<tr>
+									{#typeIs types="literal,uri"}
+										<td>{p.value}</td>
+										<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+										<td>{o.value}</td>
+									{/typeIs}
+								</tr>
+							{/predicates.list}
+						</table>
+					{/predicates.list}
+				{/debug}
 			</div>
 
-			<div>
+			<div class="row">
 				<div class="medium-6 columns">
 					<div class="entities-section"></div>
 				</div>

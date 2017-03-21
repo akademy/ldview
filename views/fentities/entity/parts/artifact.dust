@@ -6,11 +6,6 @@
 
 	 <img src="/images/front-side-angle1.jpg"/>
 
-    <small style="color:#999;">(
-        {#get key="http://annalist___net/type_id"}{#get key="@value"}{.}, {/get}{/get}
-		{#get key="@id"}{.}{/get}
-	)</small>
-
 	<p class="debug" style="display:none">
 		<small style="color:#999;">(
          {#get key="http://annalist___net/type_id"}{#get key="@value"}{.}, {/get}{/get}

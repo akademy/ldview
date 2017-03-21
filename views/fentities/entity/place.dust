@@ -1,9 +1,10 @@
 {>"fentities/entity/entity"/}
 
 {<entitysContent}
-	<small style="color:#999">(place.dust)</small>
+	{?debug}<small style="color:#999">(place.dust)</small>{/debug}
 
 	<div class="row">
+
 		<div class="medium-8 columns">
 			<div class="entity" id="main" data-subject="{subject}">
 
@@ -28,9 +29,9 @@
 						    attribution:  '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors, LDView',
 						    maxZoom: 18,
 						}).addTo(map);
-
-
 					</script>
+
+	            <p></p>
 
 					{#predicates.items}
 						{#get key="rdfs:comment"}
@@ -42,23 +43,23 @@
 					<p>No items</p>
 				{/predicates.items}
 
-				{?predicates.list}
-					<br/><br/><br/>
+				{?debug}
+					{?predicates.list}
+						<br/><br/><br/>
 
-					<table>
-						{#predicates.list}
-							<tr>
-								{#typeIs types="literal,uri"}
-									<td>{p.value}</td>
-									<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
-									<td>{o.value}</td>
-								{/typeIs}
-							</tr>
-						{/predicates.list}
-					</table>
-				{:else}
-					<p>No list</p>
-				{/predicates.list}
+						<table>
+							{#predicates.list}
+								<tr>
+									{#typeIs types="literal,uri"}
+										<td>{p.value}</td>
+										<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+										<td>{o.value}</td>
+									{/typeIs}
+								</tr>
+							{/predicates.list}
+						</table>
+					{/predicates.list}
+				{/debug}
 			</div>
 
 			<div>

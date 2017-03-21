@@ -1,7 +1,7 @@
 {>"fentities/entity/entity"/}
 
 {<entitysContent}
-	<small style="color:#999">(basic.dust)</small>
+	{?debug}<small style="color:#999">(basic.dust)</small>{/debug}
 
 	<div class="row">
 
@@ -26,6 +26,7 @@
 					{/get}
 				{/predicates.items}
 
+			{?debug}
 				<br/><br/><br/>
 					{?predicates.list}
 						<table>
@@ -39,12 +40,11 @@
 								</tr>
 							{/predicates.list}
 						</table>
-					{:else}
-						<p>Empty</p>
 					{/predicates.list}
+				{/debug}
 			</div>
 
-			<div>
+			<div class="row">
 				<div class="medium-6 columns">
 					<div class="entities-section"></div>
 				</div>
