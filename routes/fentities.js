@@ -273,7 +273,7 @@ router.get('/attrs/:uri', function(req, res ) {
 				results: bindings
 			};
 
-			evDustHelpers.addHelpers(context, config.debug && !req.query.debug );
+			evDustHelpers.addHelpers(context, config.local.debug && !req.query.debug );
 		}
 
 		res.render( render, context );

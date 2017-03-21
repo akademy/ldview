@@ -11,5 +11,6 @@ module.exports = {
 		password : /\?/        // "my_hard-password;"
 	},
 
-	// debugSaveJsonFiles : false
+	// debugSaveJsonFiles : false,
+	debug : false
 };
