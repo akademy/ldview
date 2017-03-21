@@ -29,7 +29,18 @@ akademy.webviews = akademy.webviews ||
 			_fullSize = {
 				w: _size.w * 4, // 1010,
 				h: _size.h * 4 // 685
+			},
+			windowSize = {
+				w: window.innerWidth || document.body.clientWidth,
+				h: window.innerHeight || document.body.clientHeight
 			};
+
+		if( _fullSize.w > windowSize.w ) {
+			_fullSize.w = windowSize.w - 120;
+		}
+		if( _fullSize.h > windowSize.h ) {
+			_fullSize.h = windowSize.h - 50;
+		}
 
 		window.addEventListener("message", function( event ) { console.log("A window message:", event ); }, false);
 		window.addEventListener("load", function() {
@@ -47,7 +58,7 @@ akademy.webviews = akademy.webviews ||
 				" .iframe-wrap a:hover {background-color: rgba(0,0,0,0.5);color:white;}" +
 				" .iframe-wrap a.hide {color: transparent }" +
 				" .iframe-wrap a:hover.hide {color: white }" +
-				" .iframe-wrap button {visibility:hidden;z-index:200}" +
+				" .iframe-wrap button {visibility:hidden;z-index:200;width:55px}" +
 				" .iframe-wrap.full button {visibility:visible;position:relative;left:" + (_fullSize.w + 20) + "px;}" +
 				" .iframe-wrap.full a:hover, .iframe-wrap.full a:hover.hide {background-color: rgba(0,0,0,0);color:transparent;}" +
 				" .iframe-wrap iframe {width:" + _scaledSize.w + "px;height:" + _scaledSize.h + "px;transform: scale(" + _scale + ");position:absolute;transform-origin: 0 0;overflow: hidden;background-color:white}" +
@@ -69,7 +80,7 @@ akademy.webviews = akademy.webviews ||
 					aText       = document.createTextNode( _addresses[i].title ),
 					br          = document.createElement("br"),
 					button      = document.createElement("button"),
-					buttonText  = document.createTextNode( "Close" );
+					buttonText  = document.createTextNode( "X" );
 
 				div.setAttribute( "class","iframe-wrap" );
 				div.setAttribute( "id","iframe-wrap-" + i );
@@ -89,7 +100,6 @@ akademy.webviews = akademy.webviews ||
 				a.onclick = aOnClick.bind(a,iframe);
 
 				button.onclick = buttonOnClick.bind( button, iframe );
-				button.setAttribute("value","Close");
 
 				a.appendChild(br);
 				a.appendChild(aText);
