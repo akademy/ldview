@@ -24,7 +24,6 @@ akademy.webviews = akademy.webviews ||
 					{url:"http://127.0.0.1", title : "8 OK"}
 
 				],
-			_windows = [],
 
 			_fullSize = {
 				w: _size.w * 4, // 1010,
@@ -119,8 +118,6 @@ akademy.webviews = akademy.webviews ||
 				div.appendChild(buttonRefresh);
 
 				_element.appendChild(div);
-
-				_windows.push( div );
 
 				updateIFrame( iframe, _views[i], 50 * (i+1) );
 				setTimeout( updateATitle.bind(this,a), 2500 );
