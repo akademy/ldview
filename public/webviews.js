@@ -13,15 +13,15 @@ akademy.webviews = akademy.webviews ||
 				h : _size.h * (1/_scale)
 			},
 			_element = config.element || document.body,
-			_addresses = config.addresses || [
-					{website:"http://www.akademy.co.uk", title : "1 OK"},
-					{website:"http://wouldlike.gift", title : "2 OK"},
-					{website:"http://blog.akademy.co.uk", title : "3 OK"},
-					{website:"httpf://error.example.com", title : "4 Error Bad schema"},
-					{website:"http://!$&'()*+,;=.com", title : "5 Error Bad URL"},
-					{website:"http://qweetergfsadgdvvbboisfgergerhjokjnmtn.com", title : "6 Unknown website"},
-					{website:"http:/local", title : "7 OK", textCheck: "Not Found"},
-					{website:"http://127.0.0.1", title : "8 OK"}
+			_views = config.views || [
+					{url:"http://www.akademy.co.uk", title : "1 OK"},
+					{url:"http://wouldlike.gift", title : "2 OK"},
+					{url:"http://blog.akademy.co.uk", title : "3 OK"},
+					{url:"httpf://error.example.com", title : "4 Error Bad schema"},
+					{url:"http://!$&'()*+,;=.com", title : "5 Error Bad URL"},
+					{url:"http://qweetergfsadgdvvbboisfgergerhjokjnmtn.com", title : "6 Unknown website"},
+					{url:"http:/local", title : "7 OK", textCheck: "Not Found"},
+					{url:"http://127.0.0.1", title : "8 OK"}
 
 				],
 			_windows = [],
@@ -58,7 +58,7 @@ akademy.webviews = akademy.webviews ||
 				" .iframe-wrap a:hover {background-color: rgba(0,0,0,0.5);color:white;}" +
 				" .iframe-wrap a.hide {color: transparent }" +
 				" .iframe-wrap a:hover.hide {color: white }" +
-				" .iframe-wrap button {visibility:hidden;z-index:200;width:55px}" +
+				" .iframe-wrap button {visibility:hidden;z-index:200;width:59px}" +
 				" .iframe-wrap.full button {visibility:visible;position:relative;left:" + (_fullSize.w + 20) + "px;}" +
 				" .iframe-wrap.full a:hover, .iframe-wrap.full a:hover.hide {background-color: rgba(0,0,0,0);color:transparent;}" +
 				" .iframe-wrap iframe {width:" + _scaledSize.w + "px;height:" + _scaledSize.h + "px;transform: scale(" + _scale + ");position:absolute;transform-origin: 0 0;overflow: hidden;background-color:white}" +
@@ -70,17 +70,19 @@ akademy.webviews = akademy.webviews ||
 			));
 			_element.appendChild(style);
 
-			for( var i=0; i<_addresses.length; i++  ) {
+			for( var i=0; i<_views.length; i++  ) {
 
-				_addresses[i].status = "none";
+				_views[i].status = "none";
 
 				var div         = document.createElement("div"),
 					iframe      = document.createElement("iframe"),
 					a           = document.createElement("a"),
-					aText       = document.createTextNode( _addresses[i].title ),
+					aText       = document.createTextNode( _views[i].title ),
 					br          = document.createElement("br"),
-					button      = document.createElement("button"),
-					buttonText  = document.createTextNode( "X" );
+					buttonClose      = document.createElement("button"),
+					buttonCloseText  = document.createTextNode( "✕" ), // ✕
+					buttonRefresh      = document.createElement("button"),
+					buttonRefreshText  = document.createTextNode( "↻" ); // ↻
 
 				div.setAttribute( "class","iframe-wrap" );
 				div.setAttribute( "id","iframe-wrap-" + i );
@@ -90,28 +92,37 @@ akademy.webviews = akademy.webviews ||
 				iframe.setAttribute("seamless", "seamless");
 				iframe.setAttribute( "id","iframe-" + i );
 
-				iframe.onload = iFrameOnLoad.bind( iframe, _addresses[i] );
-				iframe.onerror = iFrameOnError.bind( iframe, _addresses[i] );
+				iframe.onload = iFrameOnLoad.bind( iframe, _views[i] );
+				iframe.onerror = iFrameOnError.bind( iframe, _views[i] );
 
 				//iframe.addEventListener("message", function( event ) { console.log("A frame message:", event ); }, false);
 
-				a.setAttribute("src",_addresses[i].website);
-				a.setAttribute("alt",_addresses[i].title + " : " + _addresses[i].website);
+				a.setAttribute("src",_views[i].url);
+				a.setAttribute("alt",_views[i].title + " : " + _views[i].url);
 				a.onclick = aOnClick.bind(a,iframe);
 
-				button.onclick = buttonOnClick.bind( button, iframe );
+				buttonClose.setAttribute( "id","close" );
+				buttonClose.onclick = buttonCloseOnClick.bind( buttonClose, iframe );
+
+				buttonRefresh.setAttribute( "id","refresh" );
+				buttonRefresh.onclick = buttonRefreshOnClick.bind( buttonRefresh, iframe, _views[i] );
 
 				a.appendChild(br);
 				a.appendChild(aText);
 				div.appendChild(iframe);
 				div.appendChild(a);
-				button.appendChild(buttonText);
-				div.appendChild(button);
+				buttonClose.appendChild(buttonCloseText);
+				buttonRefresh.appendChild(buttonRefreshText);
+
+				div.appendChild(buttonClose);
+				div.appendChild(document.createElement("br"));
+				div.appendChild(buttonRefresh);
+
 				_element.appendChild(div);
 
 				_windows.push( div );
 
-				setTimeout( updateIframeSrc.bind(iframe,_addresses[i]), 50 * (i+1) );
+				updateIFrame( iframe, _views[i], 50 * (i+1) );
 				setTimeout( updateATitle.bind(this,a), 2500 );
 			}
 
@@ -119,20 +130,20 @@ akademy.webviews = akademy.webviews ||
 				a.classList.add("hide");
 			}
 
-			function updateIframeSrc(addressData) {
-				addressData.status = "loading"; // Set "real" loading, not just about:blank page loaded!
+			function updateIframeSrc(view) {
+				view.status = "loading"; // Set "real" loading, not just about:blank page loaded!
 				this.parentNode.classList.add("loading");
-				this.setAttribute("src", addressData.website );
+				this.setAttribute("src", view.url );
 			}
 
-			function iFrameOnLoad( addressData ) {
-				if( addressData.status === "loading") {
+			function iFrameOnLoad( view ) {
+				if( view.status === "loading") {
 					var divParent = this.parentNode;
 
 					divParent.classList.remove("loading");
-					addressData.status = "loaded";
+					view.status = "loaded";
 
-					// try to detect page not loaded the right website...
+					// try to detect page not loaded the right webpage...
 					try {
 						var content = (this.contentWindow || this.contentDocument);
 						if (content.document) {
@@ -144,9 +155,9 @@ akademy.webviews = akademy.webviews ||
 							divParent.classList.add("loaded-errored");
 						}
 						else {
-							if (addressData.textCheck &&
-								addressData.textCheck !== '' &&
-								content.body.innerText.indexOf(addressData.textCheck) === -1) {
+							if (view.textCheck &&
+								view.textCheck !== '' &&
+								content.body.innerText.indexOf(view.textCheck) === -1) {
 								divParent.classList.add("loaded-errored");
 							}
 							else {
@@ -163,16 +174,23 @@ akademy.webviews = akademy.webviews ||
 			}
 
 			/* Detect loading errors (but not server errors on particular page!), such as an invalid URL */
-			function iFrameOnError( addressData ) {
-				_addresses[i].status = "errored";
+			function iFrameOnError( view ) {
+				view.status = "errored";
 				this.parentNode.classList.add("error");
 			}
 
 			function aOnClick ( iframe ) {
 				iFrameLarge( iframe );
 			}
-			function buttonOnClick ( iframe ) {
+			function buttonCloseOnClick ( iframe ) {
 				iFrameSmall( iframe );
+			}
+			function buttonRefreshOnClick ( iframe, view ) {
+				updateIFrame( iframe, view );
+			}
+
+			function updateIFrame( iframe, view, updateTime ) {
+				setTimeout( updateIframeSrc.bind( iframe, view ), updateTime || 50 );
 			}
 
 			function iFrameLarge( iframe ) {
