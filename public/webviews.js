@@ -2,43 +2,50 @@ var akademy = akademy || {};
 akademy.webviews = akademy.webviews ||
 	function( config ) {
 
+		var configDefault = {
+			views : [
+				{url:"http://www.akademy.co.uk", title : "1 OK"},
+				{url:"http://wouldlike.gift", title : "2 OK"},
+				{url:"http://blog.akademy.co.uk", title : "3 OK"},
+				{url:"httpf://error.example.com", title : "4 Error Bad schema"},
+				{url:"http://!$&'()*+,;=.com", title : "5 Error Bad URL"},
+				{url:"http://qweetergfsadgdvvbboisfgergerhjokjnmtn.com", title : "6 Unknown website"},
+				{url:"http:/local", title : "7 OK", textCheck: "Not Found"},
+				{url:"http://127.0.0.1", title : "8 OK"}
+			],
+			width: 206,
+			height: 136,
+			scale: 0.2,
+			element: document.body
+		};
+
 		config = config || {};
 		var _size = {
-				w: config.width || 206,
-				h: config.height || 136
+				w: config.width || configDefault.width,
+				h: config.height || configDefault.height
 			},
-			_scale = config.scale || 0.2,
+			_scale = config.scale || configDefault.scale,
 			_scaledSize = {
 				w: _size.w * (1/_scale),
 				h : _size.h * (1/_scale)
 			},
-			_element = config.element || document.body,
-			_views = config.views || [
-					{url:"http://www.akademy.co.uk", title : "1 OK"},
-					{url:"http://wouldlike.gift", title : "2 OK"},
-					{url:"http://blog.akademy.co.uk", title : "3 OK"},
-					{url:"httpf://error.example.com", title : "4 Error Bad schema"},
-					{url:"http://!$&'()*+,;=.com", title : "5 Error Bad URL"},
-					{url:"http://qweetergfsadgdvvbboisfgergerhjokjnmtn.com", title : "6 Unknown website"},
-					{url:"http:/local", title : "7 OK", textCheck: "Not Found"},
-					{url:"http://127.0.0.1", title : "8 OK"}
+			_element = config.element || configDefault.element,
+			_views = config.views || configDefault.views;
 
-				],
-
-			_fullSize = {
-				w: _size.w * 4, // 1010,
-				h: _size.h * 4 // 685
+		var	_fullSize = {
+				w: _size.w * 4,
+				h: _size.h * 4
 			},
-			windowSize = {
+			_windowSize = {
 				w: window.innerWidth || document.body.clientWidth,
 				h: window.innerHeight || document.body.clientHeight
 			};
 
-		if( _fullSize.w > windowSize.w ) {
-			_fullSize.w = windowSize.w - 120;
+		if( _fullSize.w > _windowSize.w ) {
+			_fullSize.w = _windowSize.w - 120;
 		}
-		if( _fullSize.h > windowSize.h ) {
-			_fullSize.h = windowSize.h - 50;
+		if( _fullSize.h > _windowSize.h ) {
+			_fullSize.h = _windowSize.h - 50;
 		}
 
 		window.addEventListener("message", function( event ) { console.log("A window message:", event ); }, false);
