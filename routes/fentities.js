@@ -320,11 +320,17 @@ router.post('/links/:uri', function(req, res ) {
 					q["$or"].push({"@id": links[i].link})
 				}
 
-				db.collection(config.collection).find(q).toArray(function (err, result) {
+				db.collection(config.collection).find(q).toArray(function (err, results) {
 					if (err) {
 						throw err;
 					}
-					res.send(result);
+
+					// Take out triple underscore in keys, replace with a dot (because mongo doesn't allow dots in keys)
+					for( var i=0, iEnd=results.length; i<iEnd; i++ ) {
+						replaceUnderscoresInKeys( results[i] );
+					}
+
+					res.send(results);
 				});
 			}
 			else {
@@ -333,6 +339,22 @@ router.post('/links/:uri', function(req, res ) {
 		});
 	});
 });
+
+function replaceUnderscoresInKeys( obj ) {
+	var keys = Object.keys( obj );
+	for( var j=0, jEnd=keys.length; j<jEnd; j++ ) {
+
+		if( typeof obj[keys[j]] === 'object') {
+			replaceUnderscoresInKeys( obj[keys[j]] )
+		}
+
+		if( keys[j].indexOf("___") != -1 ) {
+			obj[keys[j].replace(/___/g,".")] = obj[keys[j]];
+			obj[keys[j]] = null;
+			delete obj[keys[j]];
+		}
+	}
+}
 
 router.get('/template/:uri', function(req, res ) {
 	// TODO work out which template we need. (Or construct the template)

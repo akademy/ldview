@@ -64,10 +64,10 @@
 
 		<div class="medium-4 columns">
 			<div class="entities-section">
-				<div class="entities" data-predicate="http://erlangen-crm___org/current/P7_took_place_at">
+				<div class="entities" data-predicate="http://erlangen-crm.org/current/P7_took_place_at">
 				</div>
 
-				<div class="entities" data-predicate="http://erlangen-crm___org/efrbroo/R25F_performed_r">
+				<div class="entities" data-predicate="http://erlangen-crm.org/efrbroo/R25F_performed_r">
 				</div>
 			</div>
 		</div>

@@ -1,5 +1,5 @@
 <h3>
-{#get key="http://www___w3___org/2000/01/rdf-schema#label"}
+{#get key="http://www.w3.org/2000/01/rdf-schema#label"}
 	{.}
 {:else}
 	{?id}
@@ -9,6 +9,6 @@
 	{/id}
 {/get}
 </h3>
-{#get key="http://www___w3___org/2000/01/rdf-schema#comment"}
+{#get key="http://www.w3.org/2000/01/rdf-schema#comment"}
 	<p>{#maxLength length="50"/}</p>
 {/get}

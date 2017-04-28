@@ -1,5 +1,5 @@
 <div class="entity" title="{#getValue key="@id"/}" data-subject="{#getValue key="@id"/}">
-	<h3>{#get key="http://www___w3___org/2000/01/rdf-schema#label"}
+	<h3>{#get key="http://www.w3.org/2000/01/rdf-schema#label"}
 			{#getValue key="@value"/}
 		{/get}
 	</h3>
@@ -8,7 +8,7 @@
 
 	<p class="debug" style="display:none">
 		<small style="color:#999;">(
-         {#get key="http://annalist___net/type_id"}{#get key="@value"}{.}, {/get}{/get}
+         {#get key="http://annalist.net/type_id"}{#get key="@value"}{.}, {/get}{/get}
 			{#get key="@id"}{.}{/get}
 		)</small>
 		{#get key="@type"}{.}<br/>{/get}

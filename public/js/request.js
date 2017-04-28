@@ -284,7 +284,7 @@ ev.EntityControl = function() {
 
 	function getEntityType( entity ) {
 		if( entity ) {
-			return entity["http://annalist___net/type_id"][0]["@value"];
+			return entity["http://annalist.net/type_id"][0]["@value"];
 		}
 		return "";
 	}
@@ -355,7 +355,7 @@ ev.EntityControl = function() {
 		var types = {};
 
 		for( var i=0,z=entities.length;i<z; i++ ){
-			var type = entities[i]["http://annalist___net/type"][0]["@id"];
+			var type = entities[i]["http://annalist.net/type"][0]["@id"];
 
 			if( types.hasOwnProperty(type)) {
 				types[type].push(entities[i]);
