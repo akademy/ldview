@@ -21,6 +21,7 @@ MongoClient.connect( config.local.databaseUrl, function(error, db) {
 				console.error( "Error:" + error );
 			}
 			else {
+				// TODO: WE MUST LOAD THIS DATA FROM SPARQL NOT FROM THE JSON-LD FILES
 				async.each(files, function (file, done) {
 
 					if (file !== "coll_context.jsonld") {
