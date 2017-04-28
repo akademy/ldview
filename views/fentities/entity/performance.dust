@@ -11,7 +11,7 @@
 				{?predicates.items}
 					<h1>
 						{#predicates.items}
-							{#get key="rdfs:label"}
+							{#get key="http://www___w3___org/2000/01/rdf-schema#label"}
 								{.}
 							{:else}
 								{subject}
@@ -23,7 +23,7 @@
 					</h1>
 
 					{#predicates.items}
-						{#get key="rdfs:comment"}
+						{#get key="http://www___w3___org/2000/01/rdf-schema#comment"}
 							<p>{.}</p>
 						{/get}
 					{/predicates.items}

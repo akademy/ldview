@@ -6,7 +6,7 @@
 
 		{#entity}
 			<div class="entity first {#value key="annal:type"/}" typeof="{#value key="annal:type"/}" resource="/entities/{_id}" >
-				<h1>{#value key="rdfs:label"/}</h1>
+				<h1>{#value key="http://www___w3___org/2000/01/rdf-schema#"/}</h1>
 				{#entity}
 
 						{#keyValues}

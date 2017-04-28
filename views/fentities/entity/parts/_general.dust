@@ -1,10 +1,10 @@
 <div class="entity" title="{#getValue key="@id"/}" data-subject="{#getValue key="@id"/}">
-	<h3>{#get key="rdfs:label"}
+	<h3>{#get key="http://www___w3___org/2000/01/rdf-schema#label"}
 			{#getValue key="@value"/}
 		{/get}
 	</h3>
 
-	{#get key="rdfs:comment"}
+	{#get key="http://www___w3___org/2000/01/rdf-schema#comment"}
 		{#get key="@value"}
 			<p>{#maxLength length="150"/}</p>
 		{/get}

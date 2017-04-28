@@ -1,6 +1,6 @@
 <div class="entity" title="{#getValue key="@id"/}" data-subject="{#getValue key="@id"/}">
 
-	<h3>{#get key="rdfs:label"}{#getValue key="@value"/}{/get}</h3>
+	<h3>{#get key="http://www___w3___org/2000/01/rdf-schema#label"}{#getValue key="@value"/}{/get}</h3>
 
 	<div id="mapid" style="height:200px;"></div>
 

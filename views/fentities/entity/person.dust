@@ -14,7 +14,7 @@
 							{#get key="http://xmlns.com/foaf/0.1/name"}
 								{.}
 							{:else}
-								{#get key="rdfs:label"}
+								{#get key="http://www___w3___org/2000/01/rdf-schema#label"}
 									{.}
 								{:else}
 									{subject}
