@@ -28,7 +28,7 @@ MongoClient.connect( config.local.databaseUrl, function(error, db) {
 						console.log(file);
 						var json = fs.readFileSync(jsonFolder + "/" + file);
 						json = JSON.parse(json);
-						json = replaceDotsInKeys(json);
+						json = removeDotsInKeys(json);
 
 						db.collection(config.collection).insertOne(json[0], function (error, result) {
 							// console.log("done...");
@@ -55,10 +55,10 @@ MongoClient.connect( config.local.databaseUrl, function(error, db) {
 											console.error(error);
 										}
 
-										var links = findLinks(objects[0]);
+										//var links = findLinks(objects[0]);
 										//console.log( util.inspect(links, {showHidden:false, colors:true, depth:null}) );
 
-										links = findLinksExtended(objects[0]);
+										var links = findLinksExtended(objects[0]);
 										//console.log( util.inspect(links, {showHidden:false, colors:true, depth:null}) );
 
 										var flatLinks = [];
@@ -66,6 +66,7 @@ MongoClient.connect( config.local.databaseUrl, function(error, db) {
 										//console.log( "FlatLinks:", util.inspect(flatLinks, {showHidden:false, colors:true, depth:null}) );
 
 										flatLinks = flatLinks.filter(function (linker) {
+											// Just collect internal graph links
 											var link = linker.link;
 											var splits = link.split("/");
 											return link.indexOf("http://annalist") != -1
@@ -73,6 +74,13 @@ MongoClient.connect( config.local.databaseUrl, function(error, db) {
 												&& link != 'http://annalist.net/EntityData'
 												&& link != id;
 										});
+
+										// Remove triple underscores
+										for( var i=0, iEnd=flatLinks.length; i<iEnd; i++ ) {
+											for( var j=0, jEnd=flatLinks[i].path.length; j<jEnd; j++ ) {
+												flatLinks[i].path[j] = flatLinks[i].path[j].replace( /___/g, ".");
+											}
+										}
 
 										//console.log(id);
 										//console.log(links);
@@ -145,13 +153,13 @@ MongoClient.connect( config.local.databaseUrl, function(error, db) {
 
 });
 
-function replaceDotsInKeys( entity ) {
+function removeDotsInKeys(entity ) {
 
 	if( entity.constructor === Array ) {
 
 		for( var i=0;i<entity.length;i++) {
 			if( entity[i].constructor === Object ) {
-				entity[i] = replaceDotsInKeys( entity[i] );
+				entity[i] = removeDotsInKeys( entity[i] );
 			}
 		}
 	}
@@ -161,10 +169,10 @@ function replaceDotsInKeys( entity ) {
 
 			var value = entity[key];
 			if( value.constructor === Object ) {
-				value = replaceDotsInKeys( value );
+				value = removeDotsInKeys( value );
 			}
 			else if( value.constructor === Array ) {
-				replaceDotsInKeys( value );
+				removeDotsInKeys( value );
 			}
 
 			if( key.indexOf(".") !== -1 ) {
@@ -181,7 +189,7 @@ function replaceDotsInKeys( entity ) {
 	return entity;
 }
 
-function findLinks( entity, base ) {
+/*function findLinks( entity, base ) {
 	base = (typeof base === "undefined") ? 1 : base + 1;
 	//console.log(base, entity);
 
@@ -200,7 +208,7 @@ function findLinks( entity, base ) {
 		}
 	}
 	return links;
-}
+}*/
 
 function findLinksExtended( entity, base, key ) {
 	base = (typeof base !== "undefined") ? base + 1 : 1;
@@ -225,9 +233,9 @@ function findLinksExtended( entity, base, key ) {
 	else if( entity.constructor === Object ) {
 		for (key in entity) {
 			if( key === "@value" || key === "@list" || (key === "@id" && base !== 1) ) {
-				var stringLink  = findLinksExtended(entity[key], base, key);
-				if( stringLink !== null ) {
-					links = links.concat( stringLink );
+				var arrayLinks  = findLinksExtended(entity[key], base, key);
+				if( arrayLinks !== null && arrayLinks.length !== 0 ) {
+					links = links.concat( arrayLinks );
 				}
 			}
 			else {
@@ -255,7 +263,7 @@ function findLinksExtended( entity, base, key ) {
 	else {
 		entity = entity.toString();
 		if( entity.indexOf( "http://" ) != -1 || entity.indexOf( "https://" ) != -1 ) {
-			return entity;
+			return [entity];
 		}
 		return null;
 	}
