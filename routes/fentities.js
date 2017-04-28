@@ -28,8 +28,8 @@ router.get('/', function(req, res /*, next */) {
 		"PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> " +
 	"select distinct ?s ?label ?comment where { " +
 	"	?s ?p ?o . " +
-	"optional { ?s <rdfs:label> ?label } " +
-	"optional { ?s <rdfs:comment> ?comment } " +
+	"optional { ?s rdfs:label ?label } " +
+	"optional { ?s rdfs:comment ?comment } " +
 	"	FILTER isURI(?s) " +
 	"}  " +
 	"order by ?s " +
@@ -64,9 +64,10 @@ router.get('/', function(req, res /*, next */) {
 
 				typeGroup.entities.push({
 					id: uri,
-					"rdfs:label": results[i].label.value,
-					"rdfs:comment": results[i].comment.value
+					"rdfs:label": results[i].label ? results[i].label.value : "No label",
+					"rdfs:comment": results[i].comment ? results[i].comment.value : "No comment"
 				});
+
 			}
 
 			context.entities = entities;
