@@ -82,9 +82,7 @@ ev.DustHelpers = {
 	
 	textToHtml : function( chunk, context, bodies, params ) {
 		var text = context.current();
-		console.log(text);
 		text = text.replace(/\r\n/g,"<br/>");
-		console.log(text);
 		return chunk.write(text);
 	}
 
