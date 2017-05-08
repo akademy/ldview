@@ -236,7 +236,7 @@ router.get('/attrs/:uri', function(req, res ) {
 	var client = new sparql.Client(sparqlClient);
 	client.query( query, function(err, result) {
 		var context = {};
-		var render = 'fentities/entity/basic';
+		var render = 'fentities/entity/_general';
 
 		if( !err && result.results.bindings.length > 0 ) {
 
