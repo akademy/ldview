@@ -16,11 +16,17 @@ Includes a node library to interface with Fuseki, see LDView / lib / fuseki.js
 
 Includes a webviews module to open multiple pages in a single page.
 
+## Docker ##
+If you use docker for mongo and fuseki:
+sudo docker run -p 3030:3030 --name ldview-fuseki -e ADMIN_PASSWORD=<PASSWORD> -d stain/jena-fuseki
+sudo docker run --name ldview-mongo -p 27017:27017 -d mongo
+
+
 ## Build ##
 
 1. git clone
 1. npm install
-1. create config-local.js
+1. copy config-local-template.js to config-local.js
 1. (create folder temp/json/original and temp/json/adjusted)
 1. node bin/jsonld.jena.loader.js (it may throw some unneeded 404s)
 1. node bin/jsonld.mongo.loader.js
