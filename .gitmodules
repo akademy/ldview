@@ -1,0 +1,3 @@
+[submodule "public/webviews"]
+	path = public/webviews
+	url = git@bitbucket.org:akademy/webviews.git

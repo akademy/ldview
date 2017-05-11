@@ -4,27 +4,41 @@
     <meta content="">
     <style></style>
   </head>
-  <body></body>
+  <body>
+  	<h1>Example pages</h1>
+  	<p>Various examples of pages throughout this dataset. Refresh every minute.</p>
+  	<div id="views"></div>
+  </body>
   <foot>
-	  <script src="webviews.js"></script>
+	  <script src="webviews/webviews.js" charset="utf-8"></script>
 	  <script>
-		var config = {};
-
-		config['addresses'] = [
+		var config = {
+			element : document.getElementById("views"),
+			width: 306,
+			height: 236,
+			views : [
 				{
-					website:"http://localhost:3001/",
-					title : "All entities"
+					url: "/attrs/http%3A%2F%2Fannalist.net%2Fannalist_sitedata%2Fc%2FCarolan_Guitar%2Fd%2FPerformance%2FCaroling_Carolan",
+					title : "Performance: Caroling Carolan",
+					autoReload : 60
 				},
 				{
-					website:"http://localhost:3001/attrs/http%3A%2F%2Fannalist.net%2Fannalist_sitedata%2Fc%2FCarolan_Guitar%2Fd%2FPerson%2FAdrian_Hazzard",
-					title : "Person Adrian Hazzard"
+					url: "/attrs/http%3A%2F%2Fannalist.net%2Fannalist_sitedata%2Fc%2FCarolan_Guitar%2Fd%2FComposition%2FCatch_the_moment",
+					title : "Composition: Catch the Moment",
+					autoReload : 60
 				},
 				{
-					website:"http://localhost:3001/attrs/http%3A%2F%2Fannalist.net%2Fannalist_sitedata%2Fc%2FCarolan_Guitar%2Fd%2FPerformance%2FCaroling_Carolan",
-					title : "Performance Caroling Carolan"
+					url: "/attrs/http%3A%2F%2Fannalist.net%2Fannalist_sitedata%2Fc%2FCarolan_Guitar%2Fd%2FPerson%2FClaire_Risley",
+					title : "Person: Claire Risley",
+					autoReload : 60
+				},
+				{
+					url: "/attrs/http%3A%2F%2Fannalist.net%2Fannalist_sitedata%2Fc%2FCarolan_Guitar%2Fd%2FWork%2FIn_the_Bleak_Midwinter",
+					title : "Work: In the Bleak Midwinter",
+					autoReload : 60
 				}
-			];
-		
+			]
+		};
 		akademy.webviews( config );
 	  </script>
   </foot>
