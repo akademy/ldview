@@ -1,13 +1,12 @@
 {>"fentities/entity/entity"/}
 
 {<entitysContent}
-
-	{?debug}<small style="color:#999">(person.dust)</small>{/debug}
+	{?debug}<small style="color:#999">(basic.dust)</small>{/debug}
 
 	<div class="row">
+
 		<div class="medium-8 columns">
 
-            {>"fentities/entity/main/person"/}
 
 			<div class="row">
 				<div class="medium-6 columns">
@@ -19,11 +18,11 @@
 				</div>
 			</div>
 
-		</div>
+		</div>{!/class=medium-8!}
 
 		<div class="medium-4 columns">
 			<div class="entities-section"></div>
 		</div>
-	</div>
 
+	</div>
 {/entitysContent}

@@ -6,50 +6,8 @@
 
 	<div class="row">
 		<div class="medium-8 columns">
-			<div class="entity" id="main" data-subject="{subject}">
 
-				{?predicates.items}
-					<h1>
-						{#predicates.items}
-							{#get key="http://www.w3.org/2000/01/rdf-schema#label"}
-								{.}
-							{:else}
-								{subject}
-							{/get}
-						{:else}
-							{subject}
-						{/predicates.items}
-
-					</h1>
-
-					{#predicates.items}
-						{#get key="http://www.w3.org/2000/01/rdf-schema#comment"}
-							<p>{#textToHtml/}</p>
-						{/get}
-					{/predicates.items}
-
-				{:else}
-					<p>Empty</p>
-				{/predicates.items}
-
-				{?debug}
-					{?predicates.list}
-						<br/><br/><br/>
-
-						<table>
-							{#predicates.list}
-								<tr>
-									{#typeIs types="literal,uri"}
-										<td>{p.value}</td>
-										<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
-										<td>{o.value}</td>
-									{/typeIs}
-								</tr>
-							{/predicates.list}
-						</table>
-					{/predicates.list}
-				{/debug}
-			</div>
+            {>"fentities/entity/main/performance"/}
 
 			<div class="row">
 				<div class="medium-6 columns">

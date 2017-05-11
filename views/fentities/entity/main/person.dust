@@ -1,0 +1,45 @@
+<div class="entity" id="main" data-subject="{subject}">
+
+    {?predicates.items}
+        <h1>
+            {#predicates.items}
+                {#get key="http://xmlns.com/foaf/0.1/name"}
+                    {.}
+                {:else}
+                    {#get key="http://www.w3.org/2000/01/rdf-schema#label"}
+                        {.}
+                    {:else}
+                        {subject}
+                    {/get}
+                {/get}
+            {/predicates.items}
+        </h1>
+
+        {#predicates.items}
+            {#get key="http://www.w3.org/2000/01/rdf-schema#comment"}
+                <p>{#textToHtml/}</p>
+            {/get}
+        {/predicates.items}
+
+    {:else}
+        <p>No items</p>
+    {/predicates.items}
+
+    {?debug}
+        {?predicates.list}
+            <br/><br/><br/>
+
+            <table>
+                {#predicates.list}
+                    <tr>
+                        {#typeIs types="literal,uri"}
+                            <td>{p.value}</td>
+                            <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                            <td>{o.value}</td>
+                        {/typeIs}
+                    </tr>
+                {/predicates.list}
+            </table>
+        {/predicates.list}
+    {/debug}
+</div>
