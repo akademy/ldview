@@ -2,9 +2,24 @@ body {
   padding: 24px 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
-#body {
+#body, header {
     max-width: 1200px;
     margin: 0 auto;
+}
+
+header {
+	padding: 10px;
+	margin-bottom: 20px;
+	background-color: black;
+	color: white;
+}
+header a {
+	font-weight: bold;
+	color: white;
+}
+header a:hover {
+	color:white;
+	text-decoration: underline;
 }
 
 a {
