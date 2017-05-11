@@ -11,7 +11,7 @@
             {/predicates.items}
         </h1>
 
-    <div id="mapid" style="height:300px"></div>
+    <div id="mapid" style="height:300px"></div><p><small style="color:#999">(Map position is an example!)</small></p>
 
         <script>
            /* 53.333 -> 51.333 */
