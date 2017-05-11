@@ -64,8 +64,8 @@ router.get('/', function(req, res /*, next */) {
 
 				typeGroup.entities.push({
 					id: uri,
-					"rdfs:label": results[i].label ? results[i].label.value : "No label",
-					"rdfs:comment": results[i].comment ? results[i].comment.value : "No comment"
+					"http://www.w3.org/2000/01/rdf-schema#label": results[i].label ? results[i].label.value : "No label",
+					"http://www.w3.org/2000/01/rdf-schema#comment": results[i].comment ? results[i].comment.value : "No comment"
 				});
 
 			}
