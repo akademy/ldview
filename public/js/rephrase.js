@@ -39,6 +39,9 @@ ev.Rephrase = {
 		}
 		else {
 			phrase = ev.Rephrase.pretty(key);
+			if( direction !== "forward" ) {
+				phrase = "(reversed) " + phrase;
+			}
 		}
 
 		return '<span title="' + key + '">' + phrase + "</span>";
