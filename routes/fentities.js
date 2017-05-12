@@ -20,6 +20,10 @@ var sparqlClient = "http://" + config.local.fuseki.host
 
 var router = express.Router();
 
+router.get('/webviews', function(req, res /*, next */) {
+	res.render('webviews');
+});
+
 /* list all the entities we have */
 router.get('/', function(req, res /*, next */) {
 
