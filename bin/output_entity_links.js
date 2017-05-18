@@ -4,7 +4,12 @@ var async = require('async');
 var MongoClient = require('mongodb').MongoClient;
 var config = require('../config/config');
 
-MongoClient.connect( config.local.databaseUrl, function(error, db) {
+const mongoConnection = "mongodb://"
+	+ config.local.mongo.host
+	+ ":"+ config.local.mongo.port
+	+ "/" + config.local.mongo.database;
+
+MongoClient.connect( mongoConnection, function(error, db) {
 	if( error ) {
 		console.error(error);
 	}

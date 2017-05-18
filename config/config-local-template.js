@@ -1,8 +1,13 @@
 /* Make a copy of this and rename to "config-local.js", fill in the blanks. */
 module.exports = {
-	databaseUrl: /\?/,        // e.g. "mongodb://localhost:port/db",
 	port: /\?/,               // e.g. 3001
-	
+
+	mongo : {
+		host: /\?/,            // "localhost",
+		port: /\?/,            //"27017",
+		database: /\?/         //"ldview"
+	},
+
 	fuseki : {
 		host : /\?/,          // "localhost",
 		port : /\?/,          //"3030",

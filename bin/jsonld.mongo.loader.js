@@ -11,7 +11,12 @@ const util = require("util");
 const MongoClient = mongo.MongoClient;
 const jsonFolder = 'temp/json/adjusted';
 
-MongoClient.connect( config.local.databaseUrl, function(error, db) {
+const mongoConnection = "mongodb://"
+							+ config.local.mongo.host
+							+ ":"+ config.local.mongo.port
+							+ "/" + config.local.mongo.database;
+
+MongoClient.connect( mongoConnection, function(error, db) {
 	if( error ) {
 		console.error( "Error:" + error );
 	}

@@ -2,7 +2,7 @@ ldview-mongo:
   image: mongo
 
   ports:
-    - 27016:27017
+    - 27001:27017
 
   volumes:
     - ./vol-mongo/:/data/db
@@ -11,7 +11,7 @@ ldview-fuseki:
   image: stain/jena-fuseki
 
   ports:
-    - 3030:3030
+    - 3031:3030
 
   environment:
     - ADMIN_PASSWORD=tDj8UuDc6AAN2VG

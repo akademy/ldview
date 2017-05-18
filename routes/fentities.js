@@ -1,22 +1,27 @@
 const util = require("util");
 const fs = require('fs');
 
-var express = require('express');
-//var fuseki = require("/lib/fuseki");
-var sparql = require( "sparql" );
+const express = require('express');
+//const fuseki = require("/lib/fuseki");
+const sparql = require( "sparql" );
 
-var mongodb = require('mongodb');
-var MongoClient = mongodb.MongoClient;
+const mongodb = require('mongodb');
+const MongoClient = mongodb.MongoClient;
 
-var config = require('../config/config');
-var helpersDust = require('../lib/helpersDust.js');
-var evDustHelpers = require('../public/js/dustHelpers.js');
-var helpersEntity = require('../lib/helpersEntity.js');
+const config = require('../config/config');
+const helpersDust = require('../lib/helpersDust.js');
+const evDustHelpers = require('../public/js/dustHelpers.js');
+const helpersEntity = require('../lib/helpersEntity.js');
 
-var sparqlClient = "http://" + config.local.fuseki.host
+const sparqlClient = "http://" + config.local.fuseki.host
 								+ ":" + config.local.fuseki.port
 								+ "/" + config.local.fuseki.dataset
 								+ "/sparql";
+
+const mongoConnection = "mongodb://"
+	+ config.local.mongo.host
+	+ ":"+ config.local.mongo.port
+	+ "/" + config.local.mongo.database;
 
 var router = express.Router();
 
@@ -311,7 +316,7 @@ router.post('/links/:uri', function(req, res ) {
 		var results = result.results.bindings;
 		res.send( results );
 	});*/
-	MongoClient.connect(config.local.databaseUrl, function(err, db) {
+	MongoClient.connect( mongoConnection, function(err, db) {
 		if (err) {
 			throw err;
 		}
