@@ -2,6 +2,8 @@
 
 {<baseContent}
 	{?entities}
+	    <p>This is just a simple view of the data to allow easy navigation and for finding specific entities.</p>
+	    <p>In future versions it could use the mini-templates for each object.</p>
 		<h1>Types</h1>
 			<ul>
 				{#entities}
