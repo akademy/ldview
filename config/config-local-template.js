@@ -4,14 +4,14 @@ module.exports = {
 
 	mongo : {
 		host: /\?/,            // "localhost",
-		port: /\?/,            //"27017",
+		port: /\?/,            //"27001",
 		database: /\?/         //"ldview"
 	},
 
 	fuseki : {
 		host : /\?/,          // "localhost",
-		port : /\?/,          //"3030",
-		dataset : /\?/,        // "test1",
+		port : /\?/,          //"3031",
+		dataset : /\?/,        // "ldview",
 		username : /\?/,        // "admin",
 		password : /\?/        // "my_hard-password;"
 	},
