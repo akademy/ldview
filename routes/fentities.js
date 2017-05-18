@@ -24,6 +24,10 @@ router.get('/webviews', function(req, res /*, next */) {
 	res.render('webviews');
 });
 
+router.get('/about', function(req, res /*, next */) {
+	res.render('about');
+});
+
 /* list all the entities we have */
 router.get('/', function(req, res /*, next */) {
 
