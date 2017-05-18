@@ -1,6 +1,7 @@
 ### Project
 config/config-local.js
-
+vol-fuseki
+vol-mongo
 
 ### Node template
 # Logs
