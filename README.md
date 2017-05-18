@@ -21,6 +21,9 @@ If you use docker for mongo and fuseki:
 sudo docker run -p 3030:3030 --name ldview-fuseki -e ADMIN_PASSWORD=<PASSWORD> -d stain/jena-fuseki
 sudo docker run --name ldview-mongo -p 27017:27017 -d mongo
 
+## Additional ##
+You may need to add an executable called "node" before you do npm install if you only have nodejs
+sudo ln -s /usr/bin/nodejs /usr/bin/node
 
 ## Build ##
 
