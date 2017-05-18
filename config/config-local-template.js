@@ -1,6 +1,6 @@
 /* Make a copy of this and rename to "config-local.js", fill in the blanks. */
 module.exports = {
-	port: /\?/,               // e.g. 3001
+	webPort: /\?/,               // e.g. 3001
 
 	mongo : {
 		host: /\?/,            // "localhost",
