@@ -1,0 +1,20 @@
+ldviewMongo:
+  image: mongo
+
+  ports:
+    - 47016:27017
+
+  volumes:
+    - ./vol-mongo/:/data/db
+
+ldviewFuseki:
+  image: stain/jena-fuseki
+
+  ports:
+    - 43030:3030
+
+  environment:
+    - ADMIN_PASSWORD=tDj8UuDc6AAN2VG
+
+  volumes:
+    - ./vol-fuseki:/fuseki
